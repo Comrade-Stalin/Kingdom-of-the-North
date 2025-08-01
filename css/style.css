@@ -81,23 +81,12 @@ main {
   color: #555;
 }
 
-/* Stark Logo */
-.intro img.sigil {
-  width: 200px;
-  margin: 30px auto;
-  display: block;
-  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.2)) invert(1) brightness(1.6);
+.banner {
+  width: 100%;
+  overflow: hidden;
+  margin: 0;
 }
 
-.banner img {
-  width: 100vw;
-  height: auto;
-  display: block;
-  margin: 0 auto;
-  border-radius: 10px;
-  border: 2px solid #444;
-  box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
-}
 
 /* Footer */
 footer {
