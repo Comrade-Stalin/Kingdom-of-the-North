@@ -1,4 +1,4 @@
-/* Reset & base styles */
+/* ===== Base Reset & Typography ===== */
 * {
   margin: 0;
   padding: 0;
@@ -23,7 +23,7 @@ a:hover {
   color: #fff;
 }
 
-/* Navigation */
+/* ===== Navigation ===== */
 header nav {
   background-color: #1a1a1a;
   padding: 1.2rem;
@@ -44,32 +44,44 @@ header nav a.active {
   border-bottom: 2px solid crimson;
 }
 
-/* Page content */
+/* ===== Page Layout ===== */
 main {
   max-width: 1100px;
-  margin: auto;
-  padding: 2rem;
-  text-align: center;
+  margin: 2rem auto;
+  padding: 1rem 2rem;
 }
 
 main h1 {
-  font-size: 2.5rem;
+  font-size: 2.4rem;
   margin-bottom: 1rem;
   color: #f3f3f3;
+  text-align: center;
 }
 
 main p {
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   font-size: 1.05rem;
   color: #ccc;
+  text-align: center;
 }
 
-/* Map Pins */
+/* ===== Footer ===== */
+footer {
+  padding: 2rem 1rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #777;
+  background-color: #111;
+  border-top: 1px solid #333;
+  margin-top: 3rem;
+}
+
+/* ===== MAP PAGE ONLY ===== */
 .map-container {
   position: relative;
   width: 100%;
   max-width: 1000px;
-  margin: 0 auto;
+  margin: 2rem auto;
 }
 
 .map-container img {
@@ -95,7 +107,7 @@ main p {
   background-color: #ff4f4f;
 }
 
-/* Modal styles */
+/* ===== Modal ===== */
 .modal {
   display: none;
   position: fixed;
@@ -119,6 +131,7 @@ main p {
   position: relative;
   box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
   animation: fadeIn 0.3s ease-out;
+  text-align: left;
 }
 
 .modal-content h2 {
@@ -145,18 +158,6 @@ main p {
   color: #fff;
 }
 
-/* Footer */
-footer {
-  padding: 2rem 1rem;
-  text-align: center;
-  font-size: 0.9rem;
-  color: #777;
-  background-color: #111;
-  border-top: 1px solid #333;
-  margin-top: 3rem;
-}
-
-/* Animations */
 @keyframes fadeIn {
   from { opacity: 0; transform: scale(0.95); }
   to   { opacity: 1; transform: scale(1); }
