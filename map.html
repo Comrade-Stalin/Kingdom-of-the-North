@@ -8,27 +8,31 @@
   <style>
     .map-container {
       position: relative;
+      width: 90%;
       max-width: 1000px;
-      margin: 0 auto;
+      margin: auto;
     }
+
     .map-container img {
       width: 100%;
       height: auto;
       display: block;
     }
+
     .pin {
       position: absolute;
-      width: 1.5%;
-      height: 0;
-      padding-bottom: 1.5%;
-      background-color: #89aeca;
-      border: 2px solid #444;
+      width: 18px;
+      height: 18px;
+      background-color: red;
       border-radius: 50%;
-      transform: translate(-50%, -50%);
+      border: 2px solid white;
       cursor: pointer;
+      transform: translate(-50%, -50%);
+      transition: transform 0.2s ease;
     }
+
     .pin:hover {
-      background-color: #b0cce3;
+      transform: translate(-50%, -50%) scale(1.2);
     }
   </style>
 </head>
@@ -39,33 +43,30 @@
       <a href="laws.html">Laws</a>
       <a href="court.html">Winter Court</a>
       <a href="guard.html">Winter Guard</a>
-      <a href="map.html">Map</a>
+      <a href="map.html" class="active">Map</a>
       <a href="stories.html">Stories</a>
       <a href="https://discord.gg/fewqRbhWhe" target="_blank">Discord</a>
     </nav>
   </header>
 
   <main>
-    <section>
-      <h1>Map of the North</h1>
-      <p>The Kingdom of the North is vast and storied. Click the marked locations to learn more about its great houses and holdings.</p>
+    <h1>Map of the North</h1>
+    <p>The Kingdom of the North is vast and storied. Click the marked locations to learn more about its great houses and holdings.</p>
 
-      <div class="map-container">
-        <img src="images/northmap.jpg" alt="Map of the North"/>
+    <div class="map-container">
+      <img src="images/northmap.jpg" alt="Map of the North"/>
 
-        <!-- Pins (with tooltips in title attribute) -->
-        <a href="#" class="pin" style="top: 42.5%; left: 48%;" title="Winterfell: The ancient seat of House Stark and heart of the North. A sprawling castle built above hot springs."></a>
-        <a href="#" class="pin" style="top: 32.5%; left: 55%;" title="Last Hearth: The stronghold of House Umber, standing near the haunted forest."></a>
-        <a href="#" class="pin" style="top: 38.8%; left: 64.5%;" title="Karhold: Home to House Karstark, a stern fortress known for its martial traditions."></a>
-        <a href="#" class="pin" style="top: 60.5%; left: 55%;" title="White Harbor: The North’s only true city and a center of trade, ruled by House Manderly."></a>
-        <a href="#" class="pin" style="top: 54.5%; left: 30%;" title="Barrowton: A town of tombs and lore, once the seat of the ancient Kings of Winter."></a>
-        <a href="#" class="pin" style="top: 31.2%; left: 27%;" title="Deepwood Motte: A coastal holdfast surrounded by woods, ruled by House Glover."></a>
-        <a href="#" class="pin" style="top: 17.8%; left: 38%;" title="Bear Island: A remote and forested isle in the Bay of Ice, ruled by House Mormont."></a>
-        <a href="#" class="pin" style="top: 64.4%; left: 43%;" title="Moat Cailin: A ruined fortress straddling the Neck. Its towers guard the border of the North."></a>
-        <a href="#" class="pin" style="top: 80.2%; left: 41%;" title="The Twins: Twin castles spanning the Green Fork. Home to House Frey."></a>
-        <a href="#" class="pin" style="top: 70.2%; left: 50%;" title="The Neck: A vast swamp inhabited by crannogmen, who defend it with secrets and stealth."></a>
-      </div>
-    </section>
+      <!-- Red Pins with Descriptions -->
+      <a href="#" class="pin" style="top: 22%; left: 36%;" title="Winterfell – Ancient seat of House Stark, heart of the North."></a>
+      <a href="#" class="pin" style="top: 20%; left: 27%;" title="Bear Island – Rugged home of the warrior women of House Mormont."></a>
+      <a href="#" class="pin" style="top: 16.5%; left: 52.5%;" title="Karhold – Eastern stronghold ruled by the stern House Karstark."></a>
+      <a href="#" class="pin" style="top: 35.5%; left: 45%;" title="White Harbor – Largest city in the North, ruled by House Manderly."></a>
+      <a href="#" class="pin" style="top: 43%; left: 33%;" title="Barrowton – Ancient burial ground of the First Kings."></a>
+      <a href="#" class="pin" style="top: 45.5%; left: 26.5%;" title="Flint's Finger – Wind-blasted peninsula home to the hardy Flints."></a>
+      <a href="#" class="pin" style="top: 40.5%; left: 58%;" title="Widow's Watch – Coastal keep guarding the Shivering Sea."></a>
+      <a href="#" class="pin" style="top: 13.5%; left: 61%;" title="Skagos – Remote island of superstition and shadow."></a>
+      <a href="#" class="pin" style="top: 11.5%; left: 47%;" title="Castle Black – The Night’s Watch headquarters on the Wall."></a>
+    </div>
   </main>
 
   <footer>
