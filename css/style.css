@@ -1,4 +1,4 @@
-/* ===== Base Reset & Typography ===== */
+/* Reset and Base Styles */
 * {
   margin: 0;
   padding: 0;
@@ -6,88 +6,105 @@
 }
 
 body {
+  background-color: #0d0d0d;
+  color: #e0e0e0;
   font-family: 'Georgia', serif;
-  background-color: #0b0b0b;
-  color: #f0f0f0;
   line-height: 1.6;
-  font-size: 17px;
 }
 
-/* ===== Header & Navigation ===== */
+a {
+  color: #b0c4ff;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Header Styles */
 header {
-  background-color: #1a1a1a;
-  padding: 0.5rem 2rem;
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  flex-wrap: wrap;
-  border-bottom: 1px solid #333;
+  align-items: center;
+  padding: 20px 40px;
+  background-color: #121212;
+  border-bottom: 2px solid #222;
 }
 
 .logo {
-  height: 40px;
+  height: 60px;
 }
 
+/* Navigation Bar */
 nav {
   display: flex;
-  gap: 1.5rem;
+  gap: 25px;
   flex-wrap: wrap;
 }
 
 nav a {
-  color: #ccc;
-  text-decoration: none;
   font-weight: bold;
+  color: #e0e0e0;
   font-size: 1rem;
+  transition: color 0.3s ease;
 }
 
 nav a:hover {
-  color: white;
+  color: #ff6b6b;
 }
 
-
-/* ===== Page Layout ===== */
+/* Main Section */
 main {
-  max-width: 1000px;
-  margin: 2rem auto;
-  padding: 0 1rem;
+  padding: 60px 20px;
   text-align: center;
+  max-width: 1000px;
+  margin: 0 auto;
 }
 
-main h1 {
-  font-size: 2rem;
-  margin-bottom: 1rem;
+/* Intro Section */
+.intro h1 {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
   color: #ffffff;
 }
 
-main h2 {
-  font-size: 1.4rem;
-  margin-top: 2rem;
-  color: #ffdddd;
+.intro p {
+  font-size: 1.1rem;
+  color: #d0d0d0;
+  max-width: 800px;
+  margin: 0 auto;
 }
 
-p {
-  color: #ccc;
-  margin-bottom: 1.2rem;
+/* Sigil Section */
+.sigil-section {
+  margin: 50px 0;
 }
 
-/* ===== Images ===== */
-img {
-  max-width: 100%;
-  height: auto;
-  border-radius: 4px;
-  margin: 1rem 0;
+.sigil {
+  width: 150px;
+  opacity: 0.9;
+  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.2));
 }
 
-/* ===== Footer ===== */
+/* Banner Image */
+.banner img {
+  width: 100%;
+  max-width: 1100px;
+  margin: 40px auto;
+  border: 2px solid #444;
+  display: block;
+  border-radius: 8px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+}
+
+/* Footer */
 footer {
-  padding: 2rem 1rem;
+  margin-top: 60px;
   text-align: center;
+  padding: 20px;
   font-size: 0.9rem;
-  color: #777;
-  background-color: #111;
+  color: #888;
   border-top: 1px solid #333;
-  margin-top: 3rem;
 }
 
 /* ===== MAP PAGE ONLY ===== */
