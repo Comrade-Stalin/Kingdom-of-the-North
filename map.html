@@ -6,6 +6,31 @@
   <title>Map of the North</title>
   <link rel="stylesheet" href="css/style.css" />
   <style>
+    body {
+      margin: 0;
+      background-color: #111;
+      color: #eee;
+      font-family: Georgia, serif;
+    }
+
+    header nav {
+      background-color: #000;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    header nav a {
+      margin: 0 1rem;
+      color: #eee;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    main {
+      padding: 2rem;
+      text-align: center;
+    }
+
     .map-container {
       position: relative;
       width: 90%;
@@ -26,13 +51,55 @@
       background-color: red;
       border-radius: 50%;
       border: 2px solid white;
-      cursor: pointer;
       transform: translate(-50%, -50%);
-      transition: transform 0.2s ease;
+      cursor: pointer;
     }
 
-    .pin:hover {
-      transform: translate(-50%, -50%) scale(1.2);
+    /* Modal styling */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 10;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.7);
+    }
+
+    .modal-content {
+      background-color: #222;
+      margin: 10% auto;
+      padding: 20px;
+      border: 1px solid #444;
+      width: 80%;
+      max-width: 500px;
+      color: #fff;
+      text-align: left;
+      border-radius: 10px;
+      position: relative;
+    }
+
+    .close {
+      position: absolute;
+      top: 8px;
+      right: 12px;
+      color: #aaa;
+      font-size: 24px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .close:hover {
+      color: white;
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem 1rem;
+      font-size: 0.9rem;
+      color: #777;
     }
   </style>
 </head>
@@ -56,21 +123,42 @@
     <div class="map-container">
       <img src="images/northmap.jpg" alt="Map of the North"/>
 
-      <!-- Red Pins with Descriptions -->
-      <a href="#" class="pin" style="top: 22%; left: 36%;" title="Winterfell – Ancient seat of House Stark, heart of the North."></a>
-      <a href="#" class="pin" style="top: 20%; left: 27%;" title="Bear Island – Rugged home of the warrior women of House Mormont."></a>
-      <a href="#" class="pin" style="top: 16.5%; left: 52.5%;" title="Karhold – Eastern stronghold ruled by the stern House Karstark."></a>
-      <a href="#" class="pin" style="top: 35.5%; left: 45%;" title="White Harbor – Largest city in the North, ruled by House Manderly."></a>
-      <a href="#" class="pin" style="top: 43%; left: 33%;" title="Barrowton – Ancient burial ground of the First Kings."></a>
-      <a href="#" class="pin" style="top: 45.5%; left: 26.5%;" title="Flint's Finger – Wind-blasted peninsula home to the hardy Flints."></a>
-      <a href="#" class="pin" style="top: 40.5%; left: 58%;" title="Widow's Watch – Coastal keep guarding the Shivering Sea."></a>
-      <a href="#" class="pin" style="top: 13.5%; left: 61%;" title="Skagos – Remote island of superstition and shadow."></a>
-      <a href="#" class="pin" style="top: 11.5%; left: 47%;" title="Castle Black – The Night’s Watch headquarters on the Wall."></a>
+      <!-- Pins -->
+      <div class="pin" style="top: 22%; left: 36%;" onclick="openModal('Winterfell', 'Seat of House Stark and heart of the North. A symbol of ancient kings and modern unity.')"></div>
+      <div class="pin" style="top: 20%; left: 27%;" onclick="openModal('Bear Island', 'Remote island home to House Mormont, known for their loyalty and fierce warriors.')"></div>
+      <div class="pin" style="top: 16.5%; left: 52.5%;" onclick="openModal('Karhold', 'An ancient stronghold in the East, seat of the proud House Karstark.')"></div>
+      <div class="pin" style="top: 35.5%; left: 45%;" onclick="openModal('White Harbor', 'The North’s only city, ruled by House Manderly. A vital port and cultural hub.')"></div>
+      <div class="pin" style="top: 43%; left: 33%;" onclick="openModal('Barrowton', 'Resting place of the Kings of Winter, and a somber bastion of ancient tradition.')"></div>
+      <div class="pin" style="top: 45.5%; left: 26.5%;" onclick="openModal('Flint’s Finger', 'A coastal fortress known for its weather-beaten defenders and icy shores.')"></div>
+      <div class="pin" style="top: 40.5%; left: 58%;" onclick="openModal('Widow’s Watch', 'Tall towers overlooking the Shivering Sea, guarding the eastern coast.')"></div>
+      <div class="pin" style="top: 13.5%; left: 61%;" onclick="openModal('Skagos', 'An island shrouded in superstition. Its people are tough and reclusive.')"></div>
+      <div class="pin" style="top: 11.5%; left: 47%;" onclick="openModal('Castle Black', 'Seat of the Night’s Watch, guarding the realms of men beyond the Wall.')"></div>
+    </div>
+
+    <!-- Modal -->
+    <div id="modal" class="modal" onclick="closeModal()">
+      <div class="modal-content" onclick="event.stopPropagation()">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2 id="modal-title"></h2>
+        <p id="modal-text"></p>
+      </div>
     </div>
   </main>
 
   <footer>
     <p>© 2025 Kingdom of the North RP | From the Neck to the Shivering Sea</p>
   </footer>
+
+  <script>
+    function openModal(title, text) {
+      document.getElementById('modal-title').innerText = title;
+      document.getElementById('modal-text').innerText = text;
+      document.getElementById('modal').style.display = 'block';
+    }
+
+    function closeModal() {
+      document.getElementById('modal').style.display = 'none';
+    }
+  </script>
 </body>
 </html>
