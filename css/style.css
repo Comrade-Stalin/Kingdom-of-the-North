@@ -84,16 +84,22 @@ main {
   filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.4)) invert(1) brightness(1.5);
 }
 
-/* Make Winterfell banner image larger and more impactful */
+/* Ensure the Winterfell image fills most of the screen */
 .banner img {
   width: 100%;
-  max-width: 1300px;         /* Was 1100px */
+  max-width: 1600px;
   height: auto;
-  margin: 50px auto;
   display: block;
-  border: 2px solid #444;
+  margin: 2rem auto;
   border-radius: 8px;
-  box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
+  border: 2px solid #2f2f2f;
+}
+
+/* Optional: tweak banner container itself if needed */
+.banner {
+  width: 100%;
+  text-align: center;
 }
 
 /* Footer */
