@@ -2,89 +2,74 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Map of the North</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="css/style.css" />
   <style>
     .map-container {
       position: relative;
-      max-width: 100%;
-      margin: auto;
+      max-width: 1000px;
+      margin: 0 auto;
     }
-
     .map-container img {
       width: 100%;
       height: auto;
       display: block;
     }
-
     .pin {
       position: absolute;
-      width: 1.5vw;
-      height: 1.5vw;
-      background-color: rgba(104, 162, 203, 0.8);
+      width: 1.5%;
+      height: 0;
+      padding-bottom: 1.5%;
+      background-color: #89aeca;
+      border: 2px solid #444;
       border-radius: 50%;
-      border: 2px solid #333;
       transform: translate(-50%, -50%);
       cursor: pointer;
     }
-
-    .pin:hover::after {
-      content: attr(data-title);
-      position: absolute;
-      top: -2em;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #222;
-      color: #fff;
-      padding: 0.2em 0.5em;
-      font-size: 0.75rem;
-      white-space: nowrap;
-      border-radius: 4px;
-      pointer-events: none;
-      z-index: 10;
-    }
-
-    h1 {
-      text-align: center;
-      margin-top: 1em;
-      color: #eee;
-    }
-
-    .map-description {
-      text-align: center;
-      color: #ccc;
-      margin-bottom: 1em;
-    }
-
-    body {
-      background-color: #0c0c0c;
-      font-family: 'Georgia', serif;
-      margin: 0;
-      padding: 0;
+    .pin:hover {
+      background-color: #b0cce3;
     }
   </style>
 </head>
 <body>
-  <h1>Map of the North</h1>
-  <p class="map-description">Explore the castles, towns, and holds of the North. Click a location to learn more.</p>
+  <header>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="laws.html">Laws</a>
+      <a href="court.html">Winter Court</a>
+      <a href="guard.html">Winter Guard</a>
+      <a href="map.html">Map</a>
+      <a href="stories.html">Stories</a>
+      <a href="https://discord.gg/fewqRbhWhe" target="_blank">Discord</a>
+    </nav>
+  </header>
 
-  <div class="map-container">
-    <img src="images/northmap.jpg" alt="Map of the North" />
+  <main>
+    <section>
+      <h1>Map of the North</h1>
+      <p>The Kingdom of the North is vast and storied. Click the marked locations to learn more about its great houses and holdings.</p>
 
-    <!-- Pins (percentage-based for responsiveness) -->
-    <div class="pin" style="top: 42.3%; left: 45.5%;" data-title="Winterfell"></div>
-    <div class="pin" style="top: 36.8%; left: 50.7%;" data-title="Last Hearth"></div>
-    <div class="pin" style="top: 30.8%; left: 56.6%;" data-title="Karhold"></div>
-    <div class="pin" style="top: 41.2%; left: 58.5%;" data-title="White Harbor"></div>
-    <div class="pin" style="top: 46.7%; left: 35.8%;" data-title="Barrowton"></div>
-    <div class="pin" style="top: 34.5%; left: 40.2%;" data-title="Deepwood Motte"></div>
-    <div class="pin" style="top: 25.3%; left: 38.5%;" data-title="Bear Island"></div>
-    <div class="pin" style="top: 54.8%; left: 44.3%;" data-title="Moat Cailin"></div>
-    <div class="pin" style="top: 59.2%; left: 47.2%;" data-title="The Twins"></div>
-    <div class="pin" style="top: 62.1%; left: 53.4%;" data-title="The Neck"></div>
+      <div class="map-container">
+        <img src="images/northmap.jpg" alt="Map of the North"/>
 
-    <!-- Add more pins here as needed -->
-  </div>
+        <!-- Pins (with tooltips in title attribute) -->
+        <a href="#" class="pin" style="top: 42.5%; left: 48%;" title="Winterfell: The ancient seat of House Stark and heart of the North. A sprawling castle built above hot springs."></a>
+        <a href="#" class="pin" style="top: 32.5%; left: 55%;" title="Last Hearth: The stronghold of House Umber, standing near the haunted forest."></a>
+        <a href="#" class="pin" style="top: 38.8%; left: 64.5%;" title="Karhold: Home to House Karstark, a stern fortress known for its martial traditions."></a>
+        <a href="#" class="pin" style="top: 60.5%; left: 55%;" title="White Harbor: The North’s only true city and a center of trade, ruled by House Manderly."></a>
+        <a href="#" class="pin" style="top: 54.5%; left: 30%;" title="Barrowton: A town of tombs and lore, once the seat of the ancient Kings of Winter."></a>
+        <a href="#" class="pin" style="top: 31.2%; left: 27%;" title="Deepwood Motte: A coastal holdfast surrounded by woods, ruled by House Glover."></a>
+        <a href="#" class="pin" style="top: 17.8%; left: 38%;" title="Bear Island: A remote and forested isle in the Bay of Ice, ruled by House Mormont."></a>
+        <a href="#" class="pin" style="top: 64.4%; left: 43%;" title="Moat Cailin: A ruined fortress straddling the Neck. Its towers guard the border of the North."></a>
+        <a href="#" class="pin" style="top: 80.2%; left: 41%;" title="The Twins: Twin castles spanning the Green Fork. Home to House Frey."></a>
+        <a href="#" class="pin" style="top: 70.2%; left: 50%;" title="The Neck: A vast swamp inhabited by crannogmen, who defend it with secrets and stealth."></a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2025 Kingdom of the North RP | From the Neck to the Shivering Sea</p>
+  </footer>
 </body>
 </html>
