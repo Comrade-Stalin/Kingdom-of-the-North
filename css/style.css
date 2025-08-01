@@ -75,26 +75,25 @@ main {
   margin: 0 auto;
 }
 
-/* Sigil Section */
-.sigil-section {
-  margin: 50px 0;
-}
-
+/* Stark sigil visibility fix */
 .sigil {
-  width: 150px;
-  opacity: 0.9;
-  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.2));
+  width: 220px;              /* Was 150px */
+  opacity: 1;
+  display: block;
+  margin: 0 auto 30px auto;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.4)) invert(1) brightness(1.5);
 }
 
-/* Banner Image */
+/* Make Winterfell banner image larger and more impactful */
 .banner img {
   width: 100%;
-  max-width: 1100px;
-  margin: 40px auto;
-  border: 2px solid #444;
+  max-width: 1300px;         /* Was 1100px */
+  height: auto;
+  margin: 50px auto;
   display: block;
+  border: 2px solid #444;
   border-radius: 8px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
 }
 
 /* Footer */
