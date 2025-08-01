@@ -25,7 +25,7 @@ header {
 }
 
 .logo {
-  height: 50px;
+  height: 40px;
 }
 
 nav {
@@ -35,20 +35,16 @@ nav {
 }
 
 nav a {
-  color: #d8d8d8;
-  font-weight: bold;
+  color: #ccc;
   text-decoration: none;
+  font-weight: bold;
   font-size: 1rem;
 }
 
 nav a:hover {
-  color: #fff;
+  color: white;
 }
 
-nav a.active {
-  color: #fff;
-  border-bottom: 2px solid crimson;
-}
 
 /* ===== Page Layout ===== */
 main {
