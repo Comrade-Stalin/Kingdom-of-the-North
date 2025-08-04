@@ -133,3 +133,59 @@ footer {
   color: #888;
   border-top: 1px solid #333;
 }
+
+/* Snowfall Animation */
+.snow-container {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.snow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(2px 2px at 20% 20%, white, transparent),
+    radial-gradient(2px 2px at 40% 40%, white, transparent),
+    radial-gradient(2px 2px at 60% 60%, white, transparent),
+    radial-gradient(2px 2px at 80% 80%, white, transparent),
+    radial-gradient(2px 2px at 30% 70%, white, transparent),
+    radial-gradient(2px 2px at 70% 30%, white, transparent);
+  background-repeat: repeat;
+  animation: snowfall 30s linear infinite;
+  opacity: 0.3;
+}
+
+.snow1 {
+  animation-duration: 50s;
+  opacity: 0.15;
+  z-index: 1;
+}
+
+.snow2 {
+  animation-duration: 30s;
+  opacity: 0.2;
+  z-index: 2;
+}
+
+.snow3 {
+  animation-duration: 20s;
+  opacity: 0.3;
+  z-index: 3;
+}
+
+@keyframes snowfall {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 0 1000px;
+  }
+}
+
