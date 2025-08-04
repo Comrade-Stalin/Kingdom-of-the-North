@@ -54,26 +54,38 @@ nav a:hover {
   color: #ff6b6b;
 }
 
-/* Main Content */
+/* Intro Section */
 main {
-  padding: 60px 20px;
+  padding: 80px 20px 40px 20px;
   text-align: center;
-  max-width: 1000px;
-  margin: 0 auto;
+  color: #ffffff;
+}
+
+.intro {
+  max-width: 800px;
+  margin: auto;
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
 }
 
 .intro h1 {
   font-size: 2.5rem;
   margin-bottom: 20px;
-  color: #ffffff;
 }
 
 .intro p {
   font-size: 1.1rem;
-  color: #cfcfcf;
   margin-bottom: 10px;
+  color: #ddd;
 }
 
+.intro img.sigil {
+  width: 180px;
+  margin-top: 30px;
+  filter: brightness(1.5) drop-shadow(0 0 6px #fff);
+}
 /* Divider */
 .section-divider {
   font-size: 2rem;
@@ -98,6 +110,18 @@ main {
   border-radius: 10px;
   border: 2px solid #444;
   box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
+}
+
+.background-overlay {
+  background-image: url("../images/winterfell.jpg");
+  background-size: cover;
+  background-position: center center;
+  background-attachment: fixed;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  backdrop-filter: brightness(0.7);
 }
 
 /* Footer */
