@@ -91,7 +91,7 @@ main {
 
 /* Winterfell Banner */
 .banner img {
-  width: 2000px;
+  width: 80vp;
   height: auto;
   display: block;
   margin: 0 auto;
