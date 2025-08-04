@@ -136,3 +136,35 @@ footer {
   }
 }
 
+.laws-page {
+  padding: 2rem;
+  background-color: #121212;
+  color: #e0e0e0;
+}
+
+.laws-page h1 {
+  text-align: center;
+  font-size: 2.2rem;
+  margin-bottom: 1.5rem;
+  color: #ffffff;
+}
+
+.law-entry {
+  margin-bottom: 3rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid #444;
+}
+
+.law-entry h2 {
+  font-size: 1.6rem;
+  margin-bottom: 0.5rem;
+  color: #9dd1ff;
+}
+
+.law-entry p {
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  color: #cccccc;
+}
+
+
