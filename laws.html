@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Laws | Kingdom of the North</title>
+  <title>Royal Edicts & Lawbook | Kingdom of the North</title>
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
   <header>
-    <img src="images/northlogo.png" alt="The Kingdom of the North" class="logo">
+    <img src="images/northlogo.png" alt="The Kingdom of the North" class="logo" />
     <nav>
       <a href="index.html">Home</a>
       <a href="laws.html">Laws</a>
@@ -21,60 +21,109 @@
   </header>
 
   <main>
-    <h1>Royal Edicts & Lawbook</h1>
+    <h1 class="page-title">Royal Edicts & Lawbook</h1>
     <div class="card-grid">
-      <div class="law-card" onclick="openModal('1Cddhl6qgAyXPGQxa_px3Mva_HfZ4dRwvBds-MzErmys')">
-        <h3>The North — Kingdom Structure</h3>
+
+      <div class="law-card" onclick="openModal('north-guide')">
+        <h2>The North — Kingdom Structure</h2>
         <p>A general guide to the roles, court, and noble hierarchy of the Kingdom of the North.</p>
       </div>
-      <div class="law-card" onclick="openModal('1VT6nkYTa8_QRBfVkzwhLa50OCB-MVViQlWcb-zCd7nk')">
-        <h3>Lawbook of the North</h3>
+
+      <div class="law-card" onclick="openModal('lawbook')">
+        <h2>Lawbook of the North</h2>
         <p>A living document of customs, rulings, and cultural precedents in the realm.</p>
       </div>
-      <div class="law-card" onclick="openModal('1D-eLSn-gduQBOgKTlKJJ2jYRLj8qhsqziUmOOLGeBq4')">
-        <h3>Edict of Change</h3>
+
+      <div class="law-card" onclick="openModal('edict-change')">
+        <h2>Edict of Change</h2>
         <p>Reaffirms House Stark as rulers of the North, ending elective succession.</p>
       </div>
-      <div class="law-card" onclick="openModal('1AZZ5ZcoazrhECjDOf7uC5mNnFLUR7wchOSNpeypkBqE')">
-        <h3>Religious Edict</h3>
+
+      <div class="law-card" onclick="openModal('religious-edict')">
+        <h2>Religious Edict</h2>
         <p>Declares the Old Gods as the sole legal faith among northern lords, with few exceptions.</p>
       </div>
-      <div class="law-card" onclick="openModal('1f3FuwCfmPJVx29A_J9StMiw32RtOLB_mje0cORo00Oc')">
-        <h3>The Winter Court</h3>
+
+      <div class="law-card" onclick="openModal('winter-court')">
+        <h2>The Winter Court</h2>
         <p>Outlines the council of advisors to the King and their official powers and titles.</p>
       </div>
-      <div class="law-card" onclick="openModal('1iCrOoexpz-dWLhz2PbHg43b3RHfSpS11-uT_iyuUyBQ')">
-        <h3>The Winter Guard</h3>
+
+      <div class="law-card" onclick="openModal('winter-guard')">
+        <h2>The Winter Guard</h2>
         <p>Defines the elite military order sworn to defend the King and serve in the vanguard.</p>
+      </div>
+
+    </div>
+
+    <!-- MODALS -->
+    <div class="modal" id="north-guide">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal('north-guide')">&times;</span>
+        <iframe src="https://docs.google.com/document/d/1Cddhl6qgAyXPGQxa_px3Mva_HfZ4dRwvBds-MzErmys/preview"></iframe>
+      </div>
+    </div>
+
+    <div class="modal" id="lawbook">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal('lawbook')">&times;</span>
+        <iframe src="https://docs.google.com/document/d/1VT6nkYTa8_QRBfVkzwhLa50OCB-MVViQlWcb-zCd7nk/preview"></iframe>
+      </div>
+    </div>
+
+    <div class="modal" id="edict-change">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal('edict-change')">&times;</span>
+        <iframe src="https://docs.google.com/document/d/1D-eLSn-gduQBOgKTlKJJ2jYRLj8qhsqziUmOOLGeBq4/preview"></iframe>
+      </div>
+    </div>
+
+    <div class="modal" id="religious-edict">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal('religious-edict')">&times;</span>
+        <iframe src="https://docs.google.com/document/d/1AZZ5ZcoazrhECjDOf7uC5mNnFLUR7wchOSNpeypkBqE/preview"></iframe>
+      </div>
+    </div>
+
+    <div class="modal" id="winter-court">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal('winter-court')">&times;</span>
+        <iframe src="https://docs.google.com/document/d/1f3FuwCfmPJVx29A_J9StMiw32RtOLB_mje0cORo00Oc/preview"></iframe>
+      </div>
+    </div>
+
+    <div class="modal" id="winter-guard">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal('winter-guard')">&times;</span>
+        <iframe src="https://docs.google.com/document/d/1iCrOoexpz-dWLhz2PbHg43b3RHfSpS11-uT_iyuUyBQ/preview"></iframe>
       </div>
     </div>
   </main>
-
-  <div class="modal-overlay" id="modalOverlay">
-    <div class="modal">
-      <button class="close-btn" onclick="closeModal()">&times;</button>
-      <iframe id="docFrame" src="" allowfullscreen></iframe>
-    </div>
-  </div>
 
   <footer>
     <p>&copy; 2025 Kingdom of the North RP | Bound by Blood, Led by Honor</p>
   </footer>
 
   <script>
-    function openModal(docId) {
-      const iframe = document.getElementById('docFrame');
-      iframe.src = `https://docs.google.com/document/d/${docId}/preview`;
-      document.getElementById('modalOverlay').style.display = 'flex';
+    function openModal(id) {
+      document.getElementById(id).style.display = 'block';
     }
-    function closeModal() {
-      document.getElementById('modalOverlay').style.display = 'none';
-      document.getElementById('docFrame').src = '';
+
+    function closeModal(id) {
+      document.getElementById(id).style.display = 'none';
     }
+
+    window.onclick = function (event) {
+      const modals = document.querySelectorAll(".modal");
+      modals.forEach(modal => {
+        if (event.target === modal) {
+          modal.style.display = "none";
+        }
+      });
+    };
   </script>
 </body>
 </html>
 
-  </script>
 </body>
 </html>
