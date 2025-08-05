@@ -259,3 +259,15 @@ footer {
   font-size: 1rem;
   line-height: 1.4;
 }
+
+.background-overlay2 {
+  background-image: url("../images/execution.jpg");
+  background-size: cover;
+  background-position: center center;
+  background-attachment: fixed;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  backdrop-filter: brightness(0.7);
+}
