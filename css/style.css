@@ -266,3 +266,11 @@ footer {
   background-repeat: no-repeat;
   background-attachment: fixed;
 }
+
+body.laws-page {
+  background-image: url('../images/letter2.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
