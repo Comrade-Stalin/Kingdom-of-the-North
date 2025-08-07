@@ -59,6 +59,7 @@ main {
   padding: 80px 20px 40px 20px;
   text-align: center;
   color: #ffffff;
+  min-height: calc(100vh - 200px); /* Ensures footer stays at bottom */
 }
 
 .intro {
