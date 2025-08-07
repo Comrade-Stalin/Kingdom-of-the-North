@@ -2,48 +2,84 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Stories of the North | Kingdom of the North</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stories | Kingdom of the North</title>
   <link rel="stylesheet" href="css/style.css" />
+  <style>
+    body {
+      background-image: url('images/weirwood.jpg');
+      background-size: cover;
+      background-attachment: fixed;
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+  </style>
 </head>
 <body>
-<header>
-  <img src="images/northlogo.png" alt="The Kingdom of the North" class="logo">
-  <nav>
-    <a href="index.html">Home</a>
-    <a href="laws.html">Laws</a>
-    <a href="court.html">Winter Court</a>
-    <a href="guard.html">Winter Guard</a>
-    <a href="map.html">Map</a>
-    <a href="stories.html">Stories</a>
-    <a href="discord.html">Discord</a>
-  </nav>
-</header>
+  <header>
+    <img src="images/northlogo.png" alt="The Kingdom of the North" class="logo">
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="laws.html">Laws</a>
+      <a href="court.html">Winter Court</a>
+      <a href="guard.html">Winter Guard</a>
+      <a href="map.html">Map</a>
+      <a href="stories.html">Stories</a>
+      <a href="discord.html">Discord</a>
+    </nav>
+  </header>
 
   <main>
-    <section class="stories">
-      <h1>Stories of the North</h1>
-      <p>These tales tell of honor, vengeance, love, and loss. The wind remembers—and so shall we.</p>
-
-      <div class="story-entry">
-        <h2><a href="https://docs.google.com/document/d/1dDNVajSt6m-u3dDGD-rek7ybdJYhGNzimOalLQQlh8/edit?usp=sharing" target="_blank">Spring Ice Beneath the Melt</a></h2>
-        <p><em>By Rykard Stark</em></p>
+    <h1>Chronicles of the North</h1>
+    <div class="card-grid">
+      <div class="law-card" onclick="openModal('1Cddhl6qgAyXPGQxa_px3Mva_HfZ4dRwvBds-MzErmys')">
+        <h3>The North</h3>
+        <p>Structure and customs of the Kingdom of the North.</p>
       </div>
-
-      <div class="story-entry">
-        <h2><a href="https://docs.google.com/document/d/1y_Vr1lbFjTTpp89re3e5bX8deODjlClaPdIoTbx290U/edit?usp=sharing" target="_blank">Winter Winds Smother the Brightest Embers</a></h2>
-        <p><em>By Rykard Stark</em></p>
+      <div class="law-card" onclick="openModal('1VT6nkYTa8_QRBfVkzwhLa50OCB-MVViQlWcb-zCd7nk')">
+        <h3>Laws of the North</h3>
+        <p>A living record of laws, edicts, and cultural rulings.</p>
       </div>
-
-      <div class="story-entry">
-        <h2><a href="https://docs.google.com/document/d/1ki1mOnwvTvY1aypc4SdnTaCNOCWvDjOf3l2PwUDC600/edit?usp=sharing" target="_blank">April Showers Bring May Flowers</a></h2>
-        <p><em>By Rykard Stark</em></p>
+      <div class="law-card" onclick="openModal('1D-eLSn-gduQBOgKTlKJJ2jYRLj8qhsqziUmOOLGeBq4')">
+        <h3>Edict of Change</h3>
+        <p>The return of House Stark’s supremacy in the North.</p>
       </div>
-    </section>
+      <div class="law-card" onclick="openModal('1AZZ5ZcoazrhECjDOf7uC5mNnFLUR7wchOSNpeypkBqE')">
+        <h3>Religious Edict</h3>
+        <p>Declares the Old Gods the sole legal faith of northern lords.</p>
+      </div>
+      <div class="law-card" onclick="openModal('1f3FuwCfmPJVx29A_J9StMiw32RtOLB_mje0cORo00Oc')">
+        <h3>The Winter Court</h3>
+        <p>Details of the King’s advisory council and their duties.</p>
+      </div>
+      <div class="law-card" onclick="openModal('1iCrOoexpz-dWLhz2PbHg43b3RHfSpS11-uT_iyuUyBQ')">
+        <h3>The Winter Guard</h3>
+        <p>Formation, roles, and leadership of the North’s elite warriors.</p>
+      </div>
+    </div>
   </main>
 
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <button class="close-btn" onclick="closeModal()">&times;</button>
+      <iframe id="docFrame" src="" allowfullscreen></iframe>
+    </div>
+  </div>
+
   <footer>
-    <p>&copy; 2025 Kingdom of the North RP | Every tale leaves its mark.</p>
+    <p>&copy; 2025 Kingdom of the North RP | Bound by Blood, Led by Honor</p>
   </footer>
+
+  <script>
+    function openModal(docId) {
+      const iframe = document.getElementById('docFrame');
+      iframe.src = `https://docs.google.com/document/d/${docId}/preview`;
+      document.getElementById('modalOverlay').style.display = 'flex';
+    }
+    function closeModal() {
+      document.getElementById('modalOverlay').style.display = 'none';
+      document.getElementById('docFrame').src = '';
+    }
+  </script>
 </body>
 </html>
