@@ -276,3 +276,26 @@ body.laws-page {
   color: #fff;
   text-decoration: underline;
 }
+
+.discord-bg {
+  background: url('../images/joindiscord.jpg') no-repeat center center fixed;
+  background-size: cover;
+  color: #fff;
+}
+
+.discord-btn {
+  background-color: #7289da;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #fff;
+  cursor: pointer;
+  margin-top: 30px;
+  transition: background-color 0.3s ease;
+}
+
+.discord-btn:hover {
+  background-color: #5b6eae;
+}
