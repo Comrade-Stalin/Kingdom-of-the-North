@@ -20,66 +20,43 @@
     </nav>
   </header>
 
-  <main>
-    <h1>Chronicles of the North</h1>
+<!-- ... keep everything before this unchanged ... -->
 
-    <!-- Pinned Roleplay Guide -->
-    <div class="pinned-guide">
-      <p><strong><a href="https://docs.google.com/document/d/16yvB65h6Cuja4rL0KeVxin1ALsMi_YxKUN8rmYZXW3E/preview" target="_blank">Northman's Roleplay Guide</a></strong> — A helpful guide for newcomers and veterans alike.</p>
-    </div>
+<main>
+  <h1>Chronicles of the North</h1>
 
-    <!-- Story Cards -->
-    <div class="card-grid">
-      <div class="law-card" onclick="openModal('1dDNVajSt6mM-u3dDGD-rek7ybdJYhGNzimOalLQQlh8')">
-        <h3>Spring Ice Beneath the Melt</h3>
-        <p>By Rykard Stark</p>
-      </div>
-      <div class="law-card" onclick="openModal('1y_Vr1lbFjTTpp89re3e5bX8deODjlClaPdIoTbx290U')">
-        <h3>Winter Winds Smother the Brightest Embers</h3>
-        <p>By Rykard Stark</p>
-      </div>
-      <div class="law-card" onclick="openModal('1ki1mOnwvTvY1aypc4SdnTaCNOCWvDjOf3l2PwUDC600')">
-        <h3>April Showers Bring May Flowers</h3>
-        <p>By Rykard Stark</p>
-      </div>
-      <div class="law-card" onclick="openModal('18upvtQHL26_qhbG4SSu_f9QShiTLKoHTy1pO5AhHJBE')">
-        <h3>Falon's Folly</h3>
-        <p>By Robb Karstark</p>
-      </div>
-      <div class="law-card" onclick="openModal('1iQjXIv_caHKnHv-F4ql3tHR-5CSGWR3a5jCr77U7G6E')">
-        <h3>Callum's Collapse</h3>
-        <p>By Robb Karstark</p>
-      </div>
-      <div class="law-card" onclick="openModal('1tv8k3e1s0NfB7uFFquDBVWGcgLyvsw2FWQmlUV30w84')">
-        <h3>A Body Amongst the Snow</h3>
-        <p>By Rykard Stark</p>
-      </div>
-    </div>
-  </main>
-
-  <!-- Modal Viewer -->
-  <div class="modal-overlay" id="modalOverlay">
-    <div class="modal">
-      <button class="close-btn" onclick="closeModal()">&times;</button>
-      <iframe id="docFrame" src="" allowfullscreen></iframe>
-    </div>
+  <!-- Pinned Roleplay Guide -->
+  <div class="pinned-guide law-card" onclick="openModal('16yvB65h6Cuja4rL0KeVxin1ALsMi_YxKUN8rmYZXW3E')">
+    <h4>Northman's Roleplay Guide</h4>
   </div>
 
-  <footer>
-    <p>&copy; 2025 Kingdom of the North RP | Bound by Blood, Led by Honor</p>
-  </footer>
+  <!-- Story Cards -->
+  <div class="card-grid">
+    <div class="law-card" onclick="openModal('1dDNVajSt6mM-u3dDGD-rek7ybdJYhGNzimOalLQQlh8')">
+      <h3>Spring Ice Beneath the Melt</h3>
+      <p>By Rykard Stark</p>
+    </div>
+    <div class="law-card" onclick="openModal('1y_Vr1lbFjTTpp89re3e5bX8deODjlClaPdIoTbx290U')">
+      <h3>Winter Winds Smother the Brightest Embers</h3>
+      <p>By Rykard Stark</p>
+    </div>
+    <div class="law-card" onclick="openModal('1ki1mOnwvTvY1aypc4SdnTaCNOCWvDjOf3l2PwUDC600')">
+      <h3>April Showers Bring May Flowers</h3>
+      <p>By Rykard Stark</p>
+    </div>
+    <div class="law-card" onclick="openModal('18upvtQHL26_qhbG4SSu_f9QShiTLKoHTy1pO5AhHJBE')">
+      <h3>Falon's Folly</h3>
+      <p>By Robb Karstark</p>
+    </div>
+    <div class="law-card" onclick="openModal('1iQjXIv_caHKnHv-F4ql3tHR-5CSGWR3a5jCr77U7G6E')">
+      <h3>Callum's Collapse</h3>
+      <p>By Robb Karstark</p>
+    </div>
+    <div class="law-card" onclick="openModal('1tv8k3e1s0NfB7uFFquDBVWGcgLyvsw2FWQmlUV30w84')">
+      <h3>A Body Amongst the Snow</h3>
+      <p>By Rykard Stark</p>
+    </div>
+  </div>
+</main>
 
-  <script>
-    function openModal(docId) {
-      const iframe = document.getElementById('docFrame');
-      iframe.src = `https://docs.google.com/document/d/${docId}/preview`;
-      document.getElementById('modalOverlay').style.display = 'flex';
-    }
-    function closeModal() {
-      document.getElementById('modalOverlay').style.display = 'none';
-      document.getElementById('docFrame').src = '';
-    }
-  </script>
-
-</body>
-</html>
+<!-- ... keep everything after this unchanged ... -->
