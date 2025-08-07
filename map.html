@@ -5,126 +5,218 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Map | Kingdom of the North</title>
   <link rel="stylesheet" href="css/style.css" />
+
+  <!-- Page‑scoped styles (won’t affect other pages) -->
   <style>
-    body, html {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      overflow: hidden;
-      font-family: 'Georgia', serif;
+    body.map-page { background:#000; overflow:hidden; }
+
+    /* Layout: keep header/footer, map fills the rest */
+    main.map-main {
+      position: relative;
+      height: calc(100vh - 140px); /* ~70px header + ~70px footer */
+      min-height: 520px;
     }
 
     .map-container {
       position: relative;
-      width: 100vw;
-      height: 100vh;
-      background: url('images/northmap.jpg') no-repeat center center fixed;
-      background-size: cover;
+      width: 100%;
+      height: 100%;
+      background: url('images/northmap.jpg') center center / cover no-repeat fixed;
+      overflow: hidden;
     }
 
-    .map-button {
+    /* Red circular pins */
+    .map-pin {
       position: absolute;
-      background-color: rgba(0, 0, 0, 0.7);
-      color: #fff;
-      border: 1px solid #ccc;
-      padding: 6px 10px;
-      border-radius: 4px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #b22222;                 /* red */
+      border: 2px solid #f3e6d0;            /* pale parchment edge */
+      box-shadow: 0 0 8px rgba(0,0,0,.5);
       cursor: pointer;
-      font-size: 0.9rem;
-      transition: transform 0.2s ease;
+      transform: translate(-50%, -50%);     /* center on the coordinate */
+    }
+    .map-pin:hover { box-shadow: 0 0 12px rgba(255,255,255,.35); }
+
+    /* Tiny hover label */
+    .map-pin::after {
+      content: attr(data-title);
+      position: absolute;
+      bottom: 22px;
+      left: 50%;
+      transform: translateX(-50%);
+      white-space: nowrap;
+      font: 600 12px/1.2 Georgia, serif;
+      color: #fff;
+      background: rgba(0,0,0,.75);
+      padding: 4px 8px;
+      border: 1px solid #444;
+      border-radius: 4px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .15s ease;
+    }
+    .map-pin:hover::after { opacity: 1; }
+
+    /* Hint in corner */
+    .map-hint {
+      position: absolute;
+      right: 10px; top: 10px;
+      background: rgba(0,0,0,.55);
+      color: #ddd;
+      padding: 6px 10px;
+      border: 1px solid #444;
+      border-radius: 6px;
+      font: 600 12px/1.2 Georgia, serif;
+      z-index: 2;
     }
 
-    .map-button:hover {
-      transform: scale(1.1);
-      background-color: rgba(60, 60, 60, 0.8);
-    }
-
-    /* Modal styles */
+    /* Parchment modal */
     .modal-overlay {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background-color: rgba(0, 0, 0, 0.8);
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,.8);
       display: none;
       justify-content: center;
       align-items: center;
       z-index: 1000;
     }
-
     .modal {
-      background: url('images/parchment.jpg') no-repeat center center;
-      background-size: cover;
-      border-radius: 12px;
-      padding: 2rem;
-      width: 90%;
-      max-width: 600px;
-      color: #000;
-      font-size: 1rem;
-      box-shadow: 0 0 40px rgba(0,0,0,0.9);
       position: relative;
-      text-align: left;
+      width: min(680px, 92vw);
+      max-height: 86vh;
+      background: url('images/parchment.jpg') center/cover no-repeat;
+      color: #331a00;
+      border-radius: 14px;
+      box-shadow: 0 0 40px rgba(0,0,0,.9);
+      padding: 28px 24px 22px;
+      overflow: auto;
     }
-
     .modal h2 {
-      margin-top: 0;
-      font-size: 1.8rem;
+      margin: 0 0 10px;
+      font: 700 26px/1.2 Georgia, serif;
+      text-shadow: 0 1px 0 #f1e2c7;
     }
-
+    .modal p { margin: 0 0 10px; font-size: 16px; }
     .close-btn {
-      position: absolute;
-      top: 10px;
-      right: 15px;
-      font-size: 1.5rem;
-      background: none;
-      border: none;
-      color: #000;
-      cursor: pointer;
-      font-weight: bold;
+      position: absolute; top: 8px; right: 12px;
+      font-size: 28px;
+      background: none; border: none; color: #2a1a0b; cursor: pointer;
     }
 
-    @media (max-width: 600px) {
-      .map-button {
-        font-size: 0.75rem;
-        padding: 5px 8px;
-      }
+    @media (max-width: 640px) {
+      main.map-main { height: calc(100vh - 150px); }
+      .map-pin { width: 16px; height: 16px; }
     }
   </style>
 </head>
-<body>
-  <div class="map-container">
+<body class="map-page">
 
-    <!-- Example Town Buttons -->
-    <button class="map-button" style="top: 35%; left: 48%;" onclick="openModal('Winterfell', 'Seat of House Stark. The heart of the North and the seat of its kings.')">Winterfell</button>
-    <button class="map-button" style="top: 28%; left: 47%;" onclick="openModal('The Wall', 'The massive Wall of ice that separates the realm of men from the wilds beyond.')">The Wall</button>
-    <button class="map-button" style="top: 42%; left: 45%;" onclick="openModal('Barrowton', 'Seat of House Dustin. Once a center of the ancient Kings of Winter.')">Barrowton</button>
-    <button class="map-button" style="top: 48%; left: 52%;" onclick="openModal('White Harbor', 'Seat of House Manderly. The North’s only major port and southern trade hub.')">White Harbor</button>
-    <button class="map-button" style="top: 55%; left: 40%;" onclick="openModal('Flints Finger', 'A rugged coastal territory ruled by House Flint. Known for its fierce warriors.')">Flints Finger</button>
-    <button class="map-button" style="top: 31%; left: 60%;" onclick="openModal('Karhold', 'Seat of House Karstark. A proud and stern people descended from House Stark.')">Karhold</button>
-    <button class="map-button" style="top: 37%; left: 56%;" onclick="openModal('Last Hearth', 'Seat of House Umber. The northernmost major holdfast loyal to the Starks.')">Last Hearth</button>
-    <button class="map-button" style="top: 40%; left: 63%;" onclick="openModal('Dreadfort', 'Seat of House Bolton. A cold and grim place with a bloody past.')">Dreadfort</button>
-    <button class="map-button" style="top: 50%; left: 30%;" onclick="openModal('Bear Island', 'Remote island ruled by House Mormont. Known for fierce warrior women.')">Bear Island</button>
+  <!-- Header (sitewide) -->
+  <header>
+    <img src="images/northlogo.png" alt="The Kingdom of the North" class="logo">
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="laws.html">Laws</a>
+      <a href="court.html">Winter Court</a>
+      <a href="guard.html">Winter Guard</a>
+      <a href="map.html">Map</a>
+      <a href="stories.html">Stories</a>
+      <a href="discord.html">Discord</a>
+    </nav>
+  </header>
 
-    <!-- Modal -->
-    <div class="modal-overlay" id="modalOverlay">
-      <div class="modal">
-        <button class="close-btn" onclick="closeModal()">&times;</button>
+  <!-- Map -->
+  <main class="map-main">
+    <div class="map-container">
+      <div class="map-hint">Click the red markers for details</div>
+
+      <!-- Pins (percent-based, so they stay put across screens) -->
+      <button class="map-pin" style="top:35%; left:48%;"
+        data-title="Winterfell"
+        data-text="Seat of House Stark and heart of the North. From its godswood to its crypts, Winterfell is the memory of the realm.">
+      </button>
+
+      <button class="map-pin" style="top:28%; left:47%;"
+        data-title="The Wall"
+        data-text="A colossal barrier of ice raised in the Age of Heroes. It separates the realm from the wild and the unknown.">
+      </button>
+
+      <button class="map-pin" style="top:37%; left:56%;"
+        data-title="Last Hearth"
+        data-text="Seat of House Umber, stalwart and unbending. The northernmost great holdfast sworn to Winterfell.">
+      </button>
+
+      <button class="map-pin" style="top:40%; left:63%;"
+        data-title="The Dreadfort"
+        data-text="Seat of House Bolton. Cold stone and colder history, etched in cruelty and iron discipline.">
+      </button>
+
+      <button class="map-pin" style="top:42%; left:45%;"
+        data-title="Barrowton"
+        data-text="Seat of House Dustin. The barrow mounds nearby whisper of the First Kings of Winter.">
+      </button>
+
+      <button class="map-pin" style="top:48%; left:52%;"
+        data-title="White Harbor"
+        data-text="Seat of House Manderly, the North’s great harbor and southern gate for trade and law.">
+      </button>
+
+      <button class="map-pin" style="top:55%; left:40%;"
+        data-title="Flint’s Finger"
+        data-text="Hard coasts and harder folk. The Flints have weathered wind and war for generations.">
+      </button>
+
+      <button class="map-pin" style="top:31%; left:60%;"
+        data-title="Karhold"
+        data-text="Seat of House Karstark, stern cousins to House Stark, famed for duty and dour resolve.">
+      </button>
+
+      <button class="map-pin" style="top:50%; left:30%;"
+        data-title="Bear Island"
+        data-text="Seat of House Mormont. Remote, relentless, and renowned for shieldmaidens of rare courage.">
+      </button>
+    </div>
+
+    <!-- Parchment Modal -->
+    <div class="modal-overlay" id="modalOverlay" aria-hidden="true">
+      <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <button class="close-btn" onclick="closeModal()" aria-label="Close">&times;</button>
         <h2 id="modalTitle"></h2>
         <p id="modalContent"></p>
       </div>
     </div>
+  </main>
 
-  </div>
+  <!-- Footer (sitewide) -->
+  <footer>
+    <p>&copy; 2025 Kingdom of the North RP | Bound by Blood, Led by Honor</p>
+  </footer>
 
   <script>
-    function openModal(title, content) {
-      document.getElementById('modalTitle').textContent = title;
-      document.getElementById('modalContent').textContent = content;
-      document.getElementById('modalOverlay').style.display = 'flex';
-    }
+    // Open modal from pin data attributes
+    document.querySelectorAll('.map-pin').forEach(pin => {
+      pin.addEventListener('click', () => {
+        document.getElementById('modalTitle').textContent = pin.dataset.title || '';
+        document.getElementById('modalContent').textContent = pin.dataset.text || '';
+        document.getElementById('modalOverlay').style.display = 'flex';
+        document.getElementById('modalOverlay').setAttribute('aria-hidden', 'false');
+      });
+    });
 
     function closeModal() {
-      document.getElementById('modalOverlay').style.display = 'none';
+      const overlay = document.getElementById('modalOverlay');
+      overlay.style.display = 'none';
+      overlay.setAttribute('aria-hidden', 'true');
     }
+
+    // Close with ESC / overlay click
+    document.getElementById('modalOverlay').addEventListener('click', (e) => {
+      if (e.target.id === 'modalOverlay') closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
   </script>
 </body>
 </html>
