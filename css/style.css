@@ -254,3 +254,24 @@ body.laws-page {
   background-attachment: fixed;
   background-repeat: no-repeat;
 }
+
+.pinned-guide {
+  max-width: 800px;
+  margin: 1rem auto 2rem auto;
+  padding: 0.75rem 1.5rem;
+  background-color: rgba(0, 0, 0, 0.65);
+  border: 1px solid #555;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 0.95rem;
+  color: #ccc;
+}
+
+.pinned-guide a {
+  color: #9dd1ff;
+}
+
+.pinned-guide a:hover {
+  color: #fff;
+  text-decoration: underline;
+}
