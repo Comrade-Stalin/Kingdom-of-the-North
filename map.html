@@ -4,133 +4,197 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Map | Kingdom of the North</title>
-  <link rel="stylesheet" href="css/style.css" />
 
-  <!-- Page-specific styles that won't disturb other pages -->
+  <!-- SELF-CONTAINED STYLES FOR THE MAP PAGE -->
   <style>
-    /* Keep footer visible and page height sane */
+    /* ---------- Base / Layout ---------- */
+    * { box-sizing: border-box; }
     html, body { height: 100%; }
-    body.map-page {
-      display: flex;
-      flex-direction: column;
-      background-color: #0d0d0d;
-    }
-    main.map-main {
-      flex: 1 0 auto;
-      padding: 0;
+    body {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      color: #eaeaea;
+      background: #0d0d0d;
     }
 
-    /* MAP FRAME
-       - aspect-ratio keeps the exact proportions of northmap.jpg
-       - background-size: contain ensures zero cropping (pins stay aligned)
-    */
+    /* ---------- Header (matched to your site) ---------- */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 12px 32px;
+      background: #111;
+      border-bottom: 2px solid #222;
+    }
+    header .logo { height: 56px; }
+    nav { display: flex; gap: 22px; flex-wrap: wrap; }
+    nav a {
+      color: #e0e0e0;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 15px;
+    }
+    nav a:hover { color: #ff6b6b; }
+
+    /* ---------- Map Canvas ---------- */
+    .map-wrap {
+      position: relative;
+      min-height: calc(100vh - 56px - 70px); /* full height minus header/footer */
+      overflow: hidden;
+      isolation: isolate; /* keeps z-index sane for children */
+    }
+    .map-bg {
+      position: absolute; inset: 0;
+      background: url("images/northmap.jpg") center/cover no-repeat fixed;
+      filter: none;
+      z-index: 0;
+    }
+
+    /* Optional frame padding (keeps ornate border visible on very wide screens) */
     .map-frame {
       position: relative;
-      width: min(1800px, 95vw);
-      aspect-ratio: 2048 / 1319; /* close to your northmap.jpg; adjust if you know exact */
-      margin: 20px auto 8px auto;
-      background: url('images/northmap.jpg') center center / contain no-repeat;
-      border: 1px solid #353535;
-      box-shadow: 0 0 45px rgba(0,0,0,0.55);
+      z-index: 1;
+      width: min(1600px, 92vw);
+      margin: 0 auto;
+      aspect-ratio: 16/9;        /* helps keep a consistent geometry */
+      /* We still let the background fill the viewport; pins are placed by % of this frame */
     }
 
-    /* Subtle “how to” note */
-    .map-note {
+    /* Note badge */
+    .hint {
       position: absolute;
-      right: 0.8%;
-      top: 1%;
+      top: 10px; right: 10px;
       background: rgba(0,0,0,.55);
-      color: #ddd;
-      padding: .35rem .6rem;
-      border: 1px solid #444;
+      color: #eee;
+      font-size: 12px;
+      padding: 8px 10px;
+      border: 1px solid #333;
       border-radius: 6px;
-      font-size: .85rem;
-      pointer-events: none;
-      user-select: none;
+      z-index: 5;
     }
 
-    /* Pins */
-    .pins { position: absolute; inset: 0; }
+    /* ---------- Pins (percentage placed) ---------- */
     .pin {
+      --size: 16px;
       position: absolute;
-      width: 18px; height: 18px;
+      width: var(--size);
+      height: var(--size);
       border-radius: 50%;
-      background: #b12222;
-      border: 2px solid #3b0d0d;
-      box-shadow: 0 0 0 3px rgba(177,34,34,.25), 0 0 10px rgba(0,0,0,.6);
+      background: #ff3b3b;
+      box-shadow:
+        0 0 0 2px #7a0f12 inset,
+        0 0 10px rgba(255, 70, 70, .6);
       transform: translate(-50%, -50%);
       cursor: pointer;
+      z-index: 3;
+      transition: transform .12s ease;
     }
-    .pin::after {
-      content: "";
-      position: absolute;
-      inset: -6px;
-      border-radius: 50%;
-      box-shadow: 0 0 12px rgba(255,52,52,.55);
-      opacity: .9;
-      animation: pulse 1.8s ease-out infinite;
-    }
-    @keyframes pulse {
-      0% { transform: scale(0.7); opacity: .8; }
-      60%{ transform: scale(1.15); opacity: 0; }
-      100%{ transform: scale(1.15); opacity: 0; }
-    }
+    .pin:hover { transform: translate(-50%, -50%) scale(1.12); }
 
-    /* Parchment Modal */
-    .map-overlay {
-      position: fixed; inset: 0;
-      background: rgba(0,0,0,.74);
-      display: none;
-      place-items: center;
-      z-index: 1000;
-      padding: 1rem;
+    /* ---------- Parchment Modal ---------- */
+    .map-modal {
+      position: fixed;
+      inset: 0;
+      display: none;              /* toggled by JS */
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,.6);
+      z-index: 9999;
     }
-    .parchment {
+    .map-modal.show { display: flex; }
+
+    .modal-card {
       position: relative;
       width: min(900px, 92vw);
-      min-height: 320px;
-      padding: 2.5rem 2rem 1.75rem;
-      background: url('images/parchment1.png') center/contain no-repeat, #f0e0b9;
-      color: #2a1f12;
-      font-family: "Georgia", serif;
-      line-height: 1.55;
-      border: 1px solid rgba(90,70,40,.4);
-      box-shadow: 0 10px 50px rgba(0,0,0,.6);
+      max-height: 80vh;
+      overflow: auto;
+      background: #e8d6b0;               /* parchment base */
+      border: 1px solid #caa96b;
+      border-radius: 6px;
+      padding: 28px 28px 22px;
+      box-shadow: 0 15px 45px rgba(0,0,0,.45);
+      color: #1f1a13;
     }
-    .parchment h2 {
-      font-size: 1.45rem;
-      margin-bottom: .25rem;
+    /* draw parchment image BEHIND content */
+    .modal-card::before {
+      content: "";
+      position: absolute;
+      inset: 12px 18px 16px 18px;
+      background: url("images/parchment1.png") center/contain no-repeat;
+      opacity: .55;
+      filter: contrast(1.05) saturate(0.95);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .modal-card > * { position: relative; z-index: 1; }
+
+    .modal-close {
+      position: absolute;
+      top: 8px; right: 10px;
+      background: none; border: 0; color: #2e2a21;
+      font-size: 26px; line-height: 1; cursor: pointer;
+    }
+    .modal-title { font-size: clamp(22px, 2.2vw, 28px); margin: 0 0 4px; color: #2a1f12; }
+    .modal-sub   { font-size: 14px; color: #6f5b3d; margin-bottom: 12px; }
+    .modal-body  { font-size: 17px; line-height: 1.55; }
+
+    /* ---------- Footer ---------- */
+    footer {
+      padding: 18px 12px 24px;
       text-align: center;
-      color: #1f1307;
-      letter-spacing: .4px;
-    }
-    .parchment small {
-      display: block;
-      text-align: center;
-      margin-bottom: .85rem;
-      color: #5a4030;
-      letter-spacing: .3px;
-    }
-    .parchment p { margin: .5rem 0; }
-    .parchment .close {
-      position: absolute; top: 8px; right: 12px;
-      font-size: 1.8rem;
-      color: #3a2a1a;
-      background: transparent;
-      border: none;
-      cursor: pointer;
-      line-height: 1;
+      color: #8f8f8f;
+      border-top: 1px solid #222;
+      background: #0f0f0f;
     }
 
-    /* Footer at the very bottom */
-    footer { flex-shrink: 0; }
+    /* ---------- Utility (visually hidden but focusable) ---------- */
+    .sr-only {
+      position: absolute !important;
+      width: 1px; height: 1px;
+      padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+    }
+
+    /* ---------- Pin coordinates
+       We place pins as % of the .map-frame (which scales responsively).
+       Tweak values here if you need micro-adjustments later. ---------- */
+    /* North-west & inland */
+    .p-bear-island     { left: 44.6%; top: 30.4%; }
+    .p-deepwood-motte  { left: 46.2%; top: 49.4%; }
+    .p-wolfswood       { left: 53.0%; top: 52.8%; }  /* region center (no modal) – unused */
+    .p-winterfell      { left: 61.6%; top: 59.4%; }
+    .p-winter-town     { left: 64.5%; top: 63.2%; }
+    .p-cerwyn          { left: 66.9%; top: 71.0%; }
+
+    /* East coast */
+    .p-karhold         { left: 84.0%; top: 56.6%; }
+    .p-blackpool       { left: 78.8%; top: 57.8%; }
+    .p-widows-watch    { left: 86.0%; top: 90.2%; }
+
+    /* Central / south */
+    .p-last-hearth     { left: 70.3%; top: 49.2%; }
+    .p-hornwood        { left: 70.6%; top: 74.4%; }
+    .p-dreadfort       { left: 73.4%; top: 66.8%; }
+    .p-white-harbor    { left: 63.7%; top: 89.5%; }
+    .p-ramsgate        { left: 76.8%; top: 89.8%; }
+    .p-oldcastle       { left: 69.6%; top: 96.4%; }
+
+    /* (Add more .p-classes with % left/top if you want additional places) */
+
+    @media (max-width: 680px) {
+      .hint { display: none; }
+      .pin { --size: 14px; }
+    }
   </style>
 </head>
-
-<body class="map-page">
-  <!-- header (sitewide style) -->
+<body>
+  <!-- Header (same links as the rest of the site) -->
   <header>
-    <img src="images/northlogo.png" alt="The Kingdom of the North" class="logo">
+    <img src="images/northlogo.png" alt="The Kingdom of the North" class="logo" />
     <nav>
       <a href="index.html">Home</a>
       <a href="laws.html">Laws</a>
@@ -138,173 +202,100 @@
       <a href="guard.html">Winter Guard</a>
       <a href="map.html">Map</a>
       <a href="stories.html">Stories</a>
-      <a href="discord.html">Discord</a>
+      <a href="discord.html">Join</a>
     </nav>
   </header>
 
-  <main class="map-main">
-    <div class="map-frame" id="mapFrame" aria-label="Map of the North">
-      <div class="map-note">Click the red markers for details</div>
+  <!-- Map -->
+  <main class="map-wrap">
+    <div class="map-bg" aria-hidden="true"></div>
 
-      <div class="pins" id="pins">
-        <!-- NORTH — left/top are percentages relative to the map image (not viewport) -->
+    <div class="map-frame">
+      <div class="hint">Click the red markers for details</div>
 
-        <!-- Winterfell -->
-        <button class="pin" data-left="46.2" data-top="52.0"
-          data-title="Winterfell"
-          data-sub="Seat of House Stark"
-          data-text="The ancient heart of the North. From winter’s snows to summer’s storms, the grey keep endures, its crypts and godswood older than memory.">
-        </button>
+      <!-- Pins (click to open modal) -->
+      <button class="pin p-bear-island"     aria-label="Bear Island"
+              onclick="openPlace('Bear Island','Seat of House Mormont',`A harsh and steadfast isle whose people are famed for iron discipline and loyalty. Their longships brave the Shivering Sea in any season.`)"></button>
 
-        <!-- White Harbor -->
-        <button class="pin" data-left="53.2" data-top="73.6"
-          data-title="White Harbor"
-          data-sub="Seat of House Manderly"
-          data-text="A wealthy harbor and the North’s greatest city, its mermen banners fly above bustling quays and loyal spears.">
-        </button>
+      <button class="pin p-deepwood-motte"  aria-label="Deepwood Motte"
+              onclick="openPlace('Deepwood Motte','Seat of House Glover',`An evergreen stronghold in the Wolfswood, its timber palisades and iron-banded gates have turned back many raiders.`)"></button>
 
-        <!-- Karhold -->
-        <button class="pin" data-left="70.8" data-top="34.8"
-          data-title="Karhold"
-          data-sub="Seat of House Karstark"
-          data-text="Hard won lands on the Shivering Sea. Stern halls, sterner oaths, and honor kept in iron.">
-        </button>
+      <button class="pin p-winterfell"      aria-label="Winterfell"
+              onclick="openPlace('Winterfell','Seat of House Stark',`The ancient heart of the North. From winter’s snows to summer’s storms, the grey keep endures, its crypts and godswood older than memory.`)"></button>
 
-        <!-- Last Hearth -->
-        <button class="pin" data-left="57.2" data-top="29.4"
-          data-title="Last Hearth"
-          data-sub="Seat of House Umber"
-          data-text="A rugged fortress of the far north; its people meet winter with laughter and very large axes.">
-        </button>
+      <button class="pin p-winter-town"     aria-label="Winter Town"
+              onclick="openPlace('Winter Town','Village outside Winterfell',`A bustling hamlet that swells with smallfolk each winter, trading wool, iron, and stories beside the castle’s warmth.`)"></button>
 
-        <!-- Deepwood Motte -->
-        <button class="pin" data-left="38.1" data-top="28.6"
-          data-title="Deepwood Motte"
-          data-sub="Seat of House Glover"
-          data-text="Timber palisades and watchful spears guard the wolfswood’s western roads.">
-        </button>
+      <button class="pin p-cerwyn"          aria-label="Cerwyn"
+              onclick="openPlace('Cerwyn','Seat of House Cerwyn',`Spearmen and pikemen drill beneath black pine banners, watching the kingsroad and guarding Winterfell’s flank.`)"></button>
 
-        <!-- Bear Island -->
-        <button class="pin" data-left="35.6" data-top="14.4"
-          data-title="Bear Island"
-          data-sub="Seat of House Mormont"
-          data-text="Stone shores, cold seas, and a house as fierce as the bears that roam its pines.">
-        </button>
+      <button class="pin p-last-hearth"     aria-label="Last Hearth"
+              onclick="openPlace('Last Hearth','Seat of House Umber',`Northmen of the old blood dwell here—loud of voice, fierce in battle, and staunch in oath.`)"></button>
 
-        <!-- Barrowton -->
-        <button class="pin" data-left="39.4" data-top="66.9"
-          data-title="Barrowton"
-          data-sub="Seat of House Dustin"
-          data-text="Raised above the barrow mounds of ancient kings, its markets serve the Rills and the Barrowlands.">
-        </button>
+      <button class="pin p-hornwood"        aria-label="Hornwood"
+              onclick="openPlace('Hornwood','Seat of House Hornwood',`Hard woods and hard men. Hunters and foresters keep the king supplied with tough yew and seasoned oak.`)"></button>
 
-        <!-- The Rills -->
-        <button class="pin" data-left="31.3" data-top="70.9"
-          data-title="The Rills"
-          data-sub="Harlaw & Saltpans"
-          data-text="Low country dappled with streams and salt marsh—fertile, stubborn, and true.">
-        </button>
+      <button class="pin p-dreadfort"       aria-label="The Dreadfort"
+              onclick="openPlace('The Dreadfort','Seat of House Bolton',`An austere fortress whose cold stones have seen too many storms—and remember every one.`)"></button>
 
-        <!-- Hornwood -->
-        <button class="pin" data-left="56.6" data-top="56.8"
-          data-title="Hornwood"
-          data-sub="Seat of House Hornwood"
-          data-text="Forested hunting grounds and iron-strong men; the Hornwood stag prowls here.">
-        </button>
+      <button class="pin p-white-harbor"    aria-label="White Harbor"
+              onclick="openPlace('White Harbor','Seat of House Manderly',`The North’s great harbor and its richest city; casks, sails, and silver flow through its quays like tides.`)"></button>
 
-        <!-- Dreadfort -->
-        <button class="pin" data-left="60.2" data-top="51.8"
-          data-title="The Dreadfort"
-          data-sub="Seat of House Bolton"
-          data-text="A grim fastness of pink stone set on the Weeping Water, infamous and unyielding.">
-        </button>
+      <button class="pin p-ramsgate"        aria-label="Ramsgate"
+              onclick="openPlace('Ramsgate','Harbor town',`A modest haven on the Bite where fishwives haggle and sellswords look for a cheap berth.`)"></button>
 
-        <!-- Ramsgate (coast) -->
-        <button class="pin" data-left="60.9" data-top="71.8"
-          data-title="Ramsgate"
-          data-sub="Harbor of the Lonely Hills"
-          data-text="A chill wind off the Bite whips its quays, but trade flows all the same.">
-        </button>
+      <button class="pin p-oldcastle"       aria-label="Oldcastle"
+              onclick="openPlace('Oldcastle','Ancient holdfast',`Weathered stones cling to the southern headlands—older than memory and stubborn as the sea.`)"></button>
 
-        <!-- Widow's Watch -->
-        <button class="pin" data-left="75.9" data-top="73.8"
-          data-title="Widow’s Watch"
-          data-sub="Seat of House Flint (of Widow’s Watch)"
-          data-text="A sea-tower set to guard the Bite; its beacon is first to greet a storm.">
-        </button>
+      <button class="pin p-karhold"         aria-label="Karhold"
+              onclick="openPlace('Karhold','Seat of House Karstark',`A stern keep looking east to the Shivering Sea; its riders range far and return with the dawn.`)"></button>
 
-        <!-- Cerwyn -->
-        <button class="pin" data-left="49.2" data-top="56.1"
-          data-title="Castle Cerwyn"
-          data-sub="Seat of House Cerwyn"
-          data-text="Loyal bannermen to the Starks, their black-and-white banners stand near Winterfell.">
-        </button>
+      <button class="pin p-blackpool"       aria-label="Blackpool"
+              onclick="openPlace('Blackpool','Coastal hold',`Fisherfolk and tough sailors call this surf‑beaten shore their home.`)"></button>
 
-        <!-- Moat Cailin / The Neck -->
-        <button class="pin" data-left="49.5" data-top="83.0"
-          data-title="Moat Cailin"
-          data-sub="The Neck"
-          data-text="Ruined towers rise from the bogs; even broken, they bar the South from the North.">
-        </button>
-
-        <!-- Oldcastle (White Knife / south coast) -->
-        <button class="pin" data-left="57.7" data-top="85.8"
-          data-title="Oldcastle"
-          data-sub="South of the Bite"
-          data-text="An old holdfast watching the river mouths and marsh roads.">
-        </button>
-
-      </div>
+      <button class="pin p-widows-watch"    aria-label="Widows Watch"
+              onclick="openPlace('Widows Watch','Eastern fastness',`A lonely tower that keeps its lamps lit for ships that would round the Fingers.`)"></button>
     </div>
   </main>
 
-  <footer>
-    <p>&copy; 2025 Kingdom of the North RP | From the Neck to the Shivering Sea</p>
-  </footer>
-
-  <div class="map-overlay" id="mapOverlay" role="dialog" aria-modal="true" aria-labelledby="mapTitle">
-    <div class="parchment">
-      <button class="close" aria-label="Close" onclick="closeMapModal()">&times;</button>
-      <h2 id="mapTitle">Title</h2>
-      <small id="mapSub">Sub</small>
-      <p id="mapText">Text</p>
+  <!-- Modal -->
+  <div id="mapModal" class="map-modal" role="dialog" aria-modal="true" aria-labelledby="placeTitle">
+    <div class="modal-card">
+      <button class="modal-close" aria-label="Close" onclick="closePlace()">&times;</button>
+      <h2 class="modal-title" id="placeTitle">Winterfell</h2>
+      <div class="modal-sub" id="placeSub">Seat of House Stark</div>
+      <div class="modal-body" id="placeText">
+        The ancient heart of the North. From winter’s snows to summer’s storms, the grey keep endures, its crypts and godswood older than memory.
+      </div>
     </div>
+    <button class="sr-only" onclick="closePlace()">Close</button>
   </div>
 
+  <!-- Footer -->
+  <footer>
+    &copy; 2025 Kingdom of the North RP | From the Neck to the Shivering Sea
+  </footer>
+
+  <!-- SELF-CONTAINED JS -->
   <script>
-    // place pins and wire modal
-    const pins = document.querySelectorAll('.pin');
-    const overlay = document.getElementById('mapOverlay');
-    const t = document.getElementById('mapTitle');
-    const s = document.getElementById('mapSub');
-    const p = document.getElementById('mapText');
+    const modal = document.getElementById('mapModal');
+    const t = id => document.getElementById(id);
 
-    function placePins() {
-      pins.forEach(pin => {
-        const left = pin.dataset.left;
-        const top  = pin.dataset.top;
-        pin.style.left = left + '%';
-        pin.style.top  = top  + '%';
-      });
+    function openPlace(title, sub, body) {
+      t('placeTitle').textContent = title || '';
+      t('placeSub').textContent   = sub || '';
+      t('placeText').innerHTML    = body || '';
+      modal.classList.add('show');
     }
-    placePins();
-    window.addEventListener('resize', placePins);
-
-    pins.forEach(pin => {
-      pin.addEventListener('click', () => {
-        t.textContent = pin.dataset.title || '';
-        s.textContent = pin.dataset.sub   || '';
-        p.textContent = pin.dataset.text  || '';
-        overlay.style.display = 'grid';
-      });
-    });
-
-    function closeMapModal(){ overlay.style.display = 'none'; }
-    overlay.addEventListener('click', (e) => {
-      if (e.target === overlay) closeMapModal();
-    });
+    function closePlace() {
+      modal.classList.remove('show');
+    }
+    // Close modal on ESC or outside click
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeMapModal();
+      if (e.key === 'Escape') closePlace();
+    });
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closePlace();
     });
   </script>
 </body>
