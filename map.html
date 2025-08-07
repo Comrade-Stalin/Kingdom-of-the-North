@@ -3,162 +3,127 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Map of the North</title>
+  <title>Map | Kingdom of the North</title>
   <link rel="stylesheet" href="css/style.css" />
   <style>
-    body {
+    body, html {
       margin: 0;
-      background-color: #111;
-      color: #eee;
-      font-family: Georgia, serif;
-    }
-
-    header nav {
-      background-color: #000;
-      padding: 1rem;
-      text-align: center;
-    }
-
-    header nav a {
-      margin: 0 1rem;
-      color: #eee;
-      text-decoration: none;
-      font-weight: bold;
-    }
-
-    main {
-      padding: 2rem;
-      text-align: center;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Georgia', serif;
     }
 
     .map-container {
       position: relative;
-      width: 90%;
-      max-width: 1000px;
-      margin: auto;
+      width: 100vw;
+      height: 100vh;
+      background: url('images/northmap.jpg') no-repeat center center fixed;
+      background-size: cover;
     }
 
-    .map-container img {
-      width: 100%;
-      height: auto;
-      display: block;
-    }
-
-    .pin {
+    .map-button {
       position: absolute;
-      width: 18px;
-      height: 18px;
-      background-color: red;
-      border-radius: 50%;
-      border: 2px solid white;
-      transform: translate(-50%, -50%);
-      cursor: pointer;
-    }
-
-    /* Modal styling */
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 10;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      overflow: auto;
       background-color: rgba(0, 0, 0, 0.7);
-    }
-
-    .modal-content {
-      background-color: #222;
-      margin: 10% auto;
-      padding: 20px;
-      border: 1px solid #444;
-      width: 80%;
-      max-width: 500px;
       color: #fff;
-      text-align: left;
-      border-radius: 10px;
-      position: relative;
-    }
-
-    .close {
-      position: absolute;
-      top: 8px;
-      right: 12px;
-      color: #aaa;
-      font-size: 24px;
-      font-weight: bold;
+      border: 1px solid #ccc;
+      padding: 6px 10px;
+      border-radius: 4px;
       cursor: pointer;
-    }
-
-    .close:hover {
-      color: white;
-    }
-
-    footer {
-      text-align: center;
-      padding: 2rem 1rem;
       font-size: 0.9rem;
-      color: #777;
+      transition: transform 0.2s ease;
+    }
+
+    .map-button:hover {
+      transform: scale(1.1);
+      background-color: rgba(60, 60, 60, 0.8);
+    }
+
+    /* Modal styles */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .modal {
+      background: url('images/parchment.jpg') no-repeat center center;
+      background-size: cover;
+      border-radius: 12px;
+      padding: 2rem;
+      width: 90%;
+      max-width: 600px;
+      color: #000;
+      font-size: 1rem;
+      box-shadow: 0 0 40px rgba(0,0,0,0.9);
+      position: relative;
+      text-align: left;
+    }
+
+    .modal h2 {
+      margin-top: 0;
+      font-size: 1.8rem;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 1.5rem;
+      background: none;
+      border: none;
+      color: #000;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    @media (max-width: 600px) {
+      .map-button {
+        font-size: 0.75rem;
+        padding: 5px 8px;
+      }
     }
   </style>
 </head>
 <body>
-<header>
-  <img src="images/northlogo.png" alt="The Kingdom of the North" class="logo">
-  <nav>
-    <a href="index.html">Home</a>
-    <a href="laws.html">Laws</a>
-    <a href="court.html">Winter Court</a>
-    <a href="guard.html">Winter Guard</a>
-    <a href="map.html">Map</a>
-    <a href="stories.html">Stories</a>
-    <a href="discord.html">Discord</a>
-  </nav>
-</header>
+  <div class="map-container">
 
-  <main>
-    <h1>Map of the North</h1>
-    <p>The Kingdom of the North is vast and storied. Click the marked locations to learn more about its great houses and holdings.</p>
-
-    <div class="map-container">
-      <img src="images/northmap.jpg" alt="Map of the North"/>
-
-      <!-- Pins -->
-      <div class="pin" style="top: 22%; left: 36%;" onclick="openModal('Winterfell', 'Seat of House Stark and heart of the North. A symbol of ancient kings and modern unity.')"></div>
-      <div class="pin" style="top: 20%; left: 27%;" onclick="openModal('Bear Island', 'Remote island home to House Mormont, known for their loyalty and fierce warriors.')"></div>
-      <div class="pin" style="top: 16.5%; left: 52.5%;" onclick="openModal('Karhold', 'An ancient stronghold in the East, seat of the proud House Karstark.')"></div>
-      <div class="pin" style="top: 35.5%; left: 45%;" onclick="openModal('White Harbor', 'The North’s only city, ruled by House Manderly. A vital port and cultural hub.')"></div>
-      <div class="pin" style="top: 43%; left: 33%;" onclick="openModal('Barrowton', 'Resting place of the Kings of Winter, and a somber bastion of ancient tradition.')"></div>
-      <div class="pin" style="top: 45.5%; left: 26.5%;" onclick="openModal('Flint’s Finger', 'A coastal fortress known for its weather-beaten defenders and icy shores.')"></div>
-      <div class="pin" style="top: 40.5%; left: 58%;" onclick="openModal('Widow’s Watch', 'Tall towers overlooking the Shivering Sea, guarding the eastern coast.')"></div>
-      <div class="pin" style="top: 13.5%; left: 61%;" onclick="openModal('Skagos', 'An island shrouded in superstition. Its people are tough and reclusive.')"></div>
-      <div class="pin" style="top: 11.5%; left: 47%;" onclick="openModal('Castle Black', 'Seat of the Night’s Watch, guarding the realms of men beyond the Wall.')"></div>
-    </div>
+    <!-- Example Town Buttons -->
+    <button class="map-button" style="top: 35%; left: 48%;" onclick="openModal('Winterfell', 'Seat of House Stark. The heart of the North and the seat of its kings.')">Winterfell</button>
+    <button class="map-button" style="top: 28%; left: 47%;" onclick="openModal('The Wall', 'The massive Wall of ice that separates the realm of men from the wilds beyond.')">The Wall</button>
+    <button class="map-button" style="top: 42%; left: 45%;" onclick="openModal('Barrowton', 'Seat of House Dustin. Once a center of the ancient Kings of Winter.')">Barrowton</button>
+    <button class="map-button" style="top: 48%; left: 52%;" onclick="openModal('White Harbor', 'Seat of House Manderly. The North’s only major port and southern trade hub.')">White Harbor</button>
+    <button class="map-button" style="top: 55%; left: 40%;" onclick="openModal('Flints Finger', 'A rugged coastal territory ruled by House Flint. Known for its fierce warriors.')">Flints Finger</button>
+    <button class="map-button" style="top: 31%; left: 60%;" onclick="openModal('Karhold', 'Seat of House Karstark. A proud and stern people descended from House Stark.')">Karhold</button>
+    <button class="map-button" style="top: 37%; left: 56%;" onclick="openModal('Last Hearth', 'Seat of House Umber. The northernmost major holdfast loyal to the Starks.')">Last Hearth</button>
+    <button class="map-button" style="top: 40%; left: 63%;" onclick="openModal('Dreadfort', 'Seat of House Bolton. A cold and grim place with a bloody past.')">Dreadfort</button>
+    <button class="map-button" style="top: 50%; left: 30%;" onclick="openModal('Bear Island', 'Remote island ruled by House Mormont. Known for fierce warrior women.')">Bear Island</button>
 
     <!-- Modal -->
-    <div id="modal" class="modal" onclick="closeModal()">
-      <div class="modal-content" onclick="event.stopPropagation()">
-        <span class="close" onclick="closeModal()">&times;</span>
-        <h2 id="modal-title"></h2>
-        <p id="modal-text"></p>
+    <div class="modal-overlay" id="modalOverlay">
+      <div class="modal">
+        <button class="close-btn" onclick="closeModal()">&times;</button>
+        <h2 id="modalTitle"></h2>
+        <p id="modalContent"></p>
       </div>
     </div>
-  </main>
 
-  <footer>
-    <p>© 2025 Kingdom of the North RP | From the Neck to the Shivering Sea</p>
-  </footer>
+  </div>
 
   <script>
-    function openModal(title, text) {
-      document.getElementById('modal-title').innerText = title;
-      document.getElementById('modal-text').innerText = text;
-      document.getElementById('modal').style.display = 'block';
+    function openModal(title, content) {
+      document.getElementById('modalTitle').textContent = title;
+      document.getElementById('modalContent').textContent = content;
+      document.getElementById('modalOverlay').style.display = 'flex';
     }
 
     function closeModal() {
-      document.getElementById('modal').style.display = 'none';
+      document.getElementById('modalOverlay').style.display = 'none';
     }
   </script>
 </body>
