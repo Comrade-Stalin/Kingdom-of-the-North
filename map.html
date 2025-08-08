@@ -2,136 +2,133 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Map | Kingdom of the North</title>
-  <link rel="stylesheet" href="css/style.css"/>
+  <link rel="stylesheet" href="css/style.css" />
+
+  <!-- Page-specific styles that won't disturb other pages -->
   <style>
-    /* ====== MAP PAGE (scoped) ====== */
-    .map-page main { padding: 20px 0 0; }
-    .map-wrap{
-      position:relative;
-      width:min(1400px,92vw);
-      margin:20px auto 70px;
-      line-height:0;              /* removes stray gaps around the img */
-      border:1px solid #1e1e1e;
-      box-shadow:0 20px 60px rgba(0,0,0,.55);
-      background:#0d0d0d;
+    /* Keep footer visible and page height sane */
+    html, body { height: 100%; }
+    body.map-page {
+      display: flex;
+      flex-direction: column;
+      background-color: #0d0d0d;
     }
-    .map-img{
-      display:block;
-      width:100%;
-      height:auto;               /* maintains aspect ratio */
-      user-select:none;
-      pointer-events:none;       /* clicks go to pins, not the img */
+    main.map-main {
+      flex: 1 0 auto;
+      padding: 0;
     }
 
-    /* Pins – “red with white dot” look */
-    .pin{
-      --x:50%;
-      --y:50%;
-      position:absolute;
-      top:var(--y); left:var(--x);
-      transform:translate(-50%,-50%);
-      width:16px; height:16px;
-      border-radius:50%;
-      background:#b40c0c;              /* red */
-      box-shadow:
-        0 0 0 2px #6b0000,             /* dark red ring */
-        0 0 0 4px rgba(0,0,0,.25);     /* soft outline */
-      cursor:pointer;
-    }
-    /* white center dot */
-    .pin::after{
-      content:"";
-      position:absolute; inset:0;
-      margin:auto;
-      width:6px; height:6px;
-      background:#faf7f2;
-      border-radius:50%;
-      transform:translateY(0.5px);     /* tiny optical nudge */
-    }
-    .pin:focus-visible{ outline:2px solid #fff; outline-offset:3px; }
-
-    /* Little helper label on desktop */
-    .map-hint{
-      position:absolute; top:8px; right:8px;
-      background:rgba(0,0,0,.55);
-      color:#e6e1d3; font-size:.85rem;
-      padding:.35rem .55rem; border-radius:6px;
-      border:1px solid rgba(255,255,255,.12);
-      z-index:3;
+    /* MAP FRAME
+       - aspect-ratio keeps the exact proportions of northmap.jpg
+       - background-size: contain ensures zero cropping (pins stay aligned)
+    */
+    .map-frame {
+      position: relative;
+      width: min(1800px, 95vw);
+      aspect-ratio: 2048 / 1319; /* close to your northmap.jpg; adjust if you know exact */
+      margin: 20px auto 8px auto;
+      background: url('images/northmap.jpg') center center / contain no-repeat;
+      border: 1px solid #353535;
+      box-shadow: 0 0 45px rgba(0,0,0,0.55);
     }
 
-    /* ===== Parchment modal ===== */
-    .sheet-overlay{
-      position:fixed; inset:0;
-      background:rgba(0,0,0,.7);
-      display:none;
-      align-items:center; justify-content:center;
-      z-index:9999;
-      padding:2rem;
-      backdrop-filter:blur(2px);
-    }
-    .sheet-overlay.open{ display:flex; }
-
-    .sheet{
-      position:relative;
-      width:min(1100px, 92vw);
-      max-height:88vh;
-      overflow:auto;
-      background:#d5c29a;                   /* parchment base tint */
-      border:1px solid rgba(0,0,0,.25);
-      box-shadow:0 30px 80px rgba(0,0,0,.7);
-      border-radius:8px;
-      padding:2rem 2rem 2.5rem;
+    /* Subtle “how to” note */
+    .map-note {
+      position: absolute;
+      right: 0.8%;
+      top: 1%;
+      background: rgba(0,0,0,.55);
+      color: #ddd;
+      padding: .35rem .6rem;
+      border: 1px solid #444;
+      border-radius: 6px;
+      font-size: .85rem;
+      pointer-events: none;
+      user-select: none;
     }
 
-    .sheet h2{
-      text-align:center;
-      font-size:1.9rem;
-      color:#2b1f14;
-      margin:0 0 .25rem 0;
+    /* Pins */
+    .pins { position: absolute; inset: 0; }
+    .pin {
+      position: absolute;
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: #b12222;
+      border: 2px solid #3b0d0d;
+      box-shadow: 0 0 0 3px rgba(177,34,34,.25), 0 0 10px rgba(0,0,0,.6);
+      transform: translate(-50%, -50%);
+      cursor: pointer;
     }
-    .sheet .sub{
-      text-align:center;
-      font-style:italic;
-      color:#423225;
-      margin-bottom:1rem;
+    .pin::after {
+      content: "";
+      position: absolute;
+      inset: -6px;
+      border-radius: 50%;
+      box-shadow: 0 0 12px rgba(255,52,52,.55);
+      opacity: .9;
+      animation: pulse 1.8s ease-out infinite;
     }
-
-    /* The parchment graphic sits as a background behind the text area. */
-    .sheet-body{
-      position:relative;
-      background: url('images/parchment1.png') center/contain no-repeat;
-      /* generous padding so text sits comfortably "on" the parchment */
-      padding: clamp(1.25rem, 3vw, 2rem) clamp(1.25rem, 3vw, 2.25rem);
-      min-height: clamp(280px, 42vh, 520px);
-      display:flex;
-      align-items:center;
-    }
-    .sheet-body p{
-      margin:0 auto;
-      max-width: 58ch;
-      font-size: clamp(1rem, 2.1vw, 1.1rem);
-      line-height:1.7;
-      color:#2a1e15;
-      text-shadow: 0 1px 0 rgba(255,255,255,.25);
+    @keyframes pulse {
+      0% { transform: scale(0.7); opacity: .8; }
+      60%{ transform: scale(1.15); opacity: 0; }
+      100%{ transform: scale(1.15); opacity: 0; }
     }
 
-    .sheet-close{
-      position:absolute; top:.6rem; right:.8rem;
-      background:none; border:none;
-      color:#2b1f14; font-size:1.6rem;
-      cursor:pointer; line-height:1;
+    /* Parchment Modal */
+    .map-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,.74);
+      display: none;
+      place-items: center;
+      z-index: 1000;
+      padding: 1rem;
+    }
+    .parchment {
+      position: relative;
+      width: min(900px, 92vw);
+      min-height: 320px;
+      padding: 2.5rem 2rem 1.75rem;
+      background: url('images/parchment1.png') center/contain no-repeat, #f0e0b9;
+      color: #2a1f12;
+      font-family: "Georgia", serif;
+      line-height: 1.55;
+      border: 1px solid rgba(90,70,40,.4);
+      box-shadow: 0 10px 50px rgba(0,0,0,.6);
+    }
+    .parchment h2 {
+      font-size: 1.45rem;
+      margin-bottom: .25rem;
+      text-align: center;
+      color: #1f1307;
+      letter-spacing: .4px;
+    }
+    .parchment small {
+      display: block;
+      text-align: center;
+      margin-bottom: .85rem;
+      color: #5a4030;
+      letter-spacing: .3px;
+    }
+    .parchment p { margin: .5rem 0; }
+    .parchment .close {
+      position: absolute; top: 8px; right: 12px;
+      font-size: 1.8rem;
+      color: #3a2a1a;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      line-height: 1;
     }
 
-    /* Footer spacing on this page */
-    .map-page footer{ margin-top:20px; }
+    /* Footer at the very bottom */
+    footer { flex-shrink: 0; }
   </style>
 </head>
-<body class="map-page">
 
-  <!-- Header (sitewide) -->
+<body class="map-page">
+  <!-- header (sitewide style) -->
   <header>
     <img src="images/northlogo.png" alt="The Kingdom of the North" class="logo">
     <nav>
@@ -145,177 +142,170 @@
     </nav>
   </header>
 
-  <main>
-    <div class="map-wrap" id="mapWrap">
-      <div class="map-hint">Click the red markers for details</div>
-      <img id="northMap" class="map-img" src="images/northmap.jpg" alt="The North — map" />
+  <main class="map-main">
+    <div class="map-frame" id="mapFrame" aria-label="Map of the North">
+      <div class="map-note">Click the red markers for details</div>
 
-      <!-- ======= PINS (percent positions) ======= -->
-      <!-- North note: these coords are tuned to YOUR northmap.jpg with the ornate border. -->
+      <div class="pins" id="pins">
+        <!-- NORTH — left/top are percentages relative to the map image (not viewport) -->
 
-      <!-- Winterfell -->
-      <button class="pin" style="--x:53.3%; --y:59.9%"
-        data-title="Winterfell"
-        data-sub="Seat of House Stark"
-        data-text="The ancient heart of the North. From winter’s snows to summer’s storms, the grey keep endures; its crypts and godswood older than memory.">
-      </button>
+        <!-- Winterfell -->
+        <button class="pin" data-left="46.2" data-top="52.0"
+          data-title="Winterfell"
+          data-sub="Seat of House Stark"
+          data-text="The ancient heart of the North. From winter’s snows to summer’s storms, the grey keep endures, its crypts and godswood older than memory.">
+        </button>
 
-      <!-- White Harbor -->
-      <button class="pin" style="--x:62.2%; --y:79.6%"
-        data-title="White Harbor"
-        data-sub="City of the Manderlys"
-        data-text="The North’s great port—a forest of masts and marble, trade flowing to the Bite and beyond. Spiced wine at the docks, oaths kept in the Merman’s Court.">
-      </button>
+        <!-- White Harbor -->
+        <button class="pin" data-left="53.2" data-top="73.6"
+          data-title="White Harbor"
+          data-sub="Seat of House Manderly"
+          data-text="A wealthy harbor and the North’s greatest city, its mermen banners fly above bustling quays and loyal spears.">
+        </button>
 
-      <!-- Deepwood Motte -->
-      <button class="pin" style="--x:43.5%; --y:46.2%"
-        data-title="Deepwood Motte"
-        data-sub="Seat of House Glover"
-        data-text="Pine‑dark hills and timber palisades; the Motte stands stubborn in wind and rain, a green banner over storm‑bent forest.">
-      </button>
+        <!-- Karhold -->
+        <button class="pin" data-left="70.8" data-top="34.8"
+          data-title="Karhold"
+          data-sub="Seat of House Karstark"
+          data-text="Hard won lands on the Shivering Sea. Stern halls, sterner oaths, and honor kept in iron.">
+        </button>
 
-      <!-- Last Hearth -->
-      <button class="pin" style="--x:60.2%; --y:37.4%"
-        data-title="Last Hearth"
-        data-sub="Seat of House Umber"
-        data-text="Hard stone and harder men. A bastion on the long road south where the snows grow deep and tales grow taller.">
-      </button>
+        <!-- Last Hearth -->
+        <button class="pin" data-left="57.2" data-top="29.4"
+          data-title="Last Hearth"
+          data-sub="Seat of House Umber"
+          data-text="A rugged fortress of the far north; its people meet winter with laughter and very large axes.">
+        </button>
 
-      <!-- Karhold -->
-      <button class="pin" style="--x:73.2%; --y:44.4%"
-        data-title="Karhold"
-        data-sub="Seat of House Karstark"
-        data-text="A keep hewn from frost and tradition, its banners a sunburst in winter’s pale light; kin to Stark by ancient blood.">
-      </button>
+        <!-- Deepwood Motte -->
+        <button class="pin" data-left="38.1" data-top="28.6"
+          data-title="Deepwood Motte"
+          data-sub="Seat of House Glover"
+          data-text="Timber palisades and watchful spears guard the wolfswood’s western roads.">
+        </button>
 
-      <!-- Dreadfort -->
-      <button class="pin" style="--x:66.7%; --y:60.0%"
-        data-title="The Dreadfort"
-        data-sub="Seat of House Bolton"
-        data-text="Pale stone and darker tales; a fortress that watches the Weeping Water with an unblinking eye.">
-      </button>
+        <!-- Bear Island -->
+        <button class="pin" data-left="35.6" data-top="14.4"
+          data-title="Bear Island"
+          data-sub="Seat of House Mormont"
+          data-text="Stone shores, cold seas, and a house as fierce as the bears that roam its pines.">
+        </button>
 
-      <!-- Barrowton -->
-      <button class="pin" style="--x:51.2%; --y:74.6%"
-        data-title="Barrowton"
-        data-sub="Seat of House Dustin"
-        data-text="Mounds older than kingdoms, where barrow‑lords sleep beneath the heather and trade caravans circle like crows.">
-      </button>
+        <!-- Barrowton -->
+        <button class="pin" data-left="39.4" data-top="66.9"
+          data-title="Barrowton"
+          data-sub="Seat of House Dustin"
+          data-text="Raised above the barrow mounds of ancient kings, its markets serve the Rills and the Barrowlands.">
+        </button>
 
-      <!-- The Rills -->
-      <button class="pin" style="--x:45.7%; --y:76.9%"
-        data-title="The Rills"
-        data-sub="Marshland & Farms"
-        data-text="Flooded flats laced with waterways—patient fields, reed cutters and riverwise folk.">
-      </button>
+        <!-- The Rills -->
+        <button class="pin" data-left="31.3" data-top="70.9"
+          data-title="The Rills"
+          data-sub="Harlaw & Saltpans"
+          data-text="Low country dappled with streams and salt marsh—fertile, stubborn, and true.">
+        </button>
 
-      <!-- Moat Cailin -->
-      <button class="pin" style="--x:57.6%; --y:84.7%"
-        data-title="Moat Cailin"
-        data-sub="The Neck"
-        data-text="Broken towers in endless bog, yet stronger than any wall; the choke‑point that has humbled kings.">
-      </button>
+        <!-- Hornwood -->
+        <button class="pin" data-left="56.6" data-top="56.8"
+          data-title="Hornwood"
+          data-sub="Seat of House Hornwood"
+          data-text="Forested hunting grounds and iron-strong men; the Hornwood stag prowls here.">
+        </button>
 
-      <!-- The Twins (edge reference south) -->
-      <button class="pin" style="--x:63.9%; --y:92.6%"
-        data-title="The Twins"
-        data-sub="Crossing of the Green Fork"
-        data-text="Stone towers astride the river, gatekeepers to the south when the North rides.">
-      </button>
+        <!-- Dreadfort -->
+        <button class="pin" data-left="60.2" data-top="51.8"
+          data-title="The Dreadfort"
+          data-sub="Seat of House Bolton"
+          data-text="A grim fastness of pink stone set on the Weeping Water, infamous and unyielding.">
+        </button>
 
-      <!-- Skagos (island pin) -->
-      <button class="pin" style="--x:64.9%; --y:20.5%"
-        data-title="Skagos"
-        data-sub="Island of hard winters"
-        data-text="Steep‑cliffed and stubborn, where the sea gnaws at black rock and old ways endure.">
-      </button>
+        <!-- Ramsgate (coast) -->
+        <button class="pin" data-left="60.9" data-top="71.8"
+          data-title="Ramsgate"
+          data-sub="Harbor of the Lonely Hills"
+          data-text="A chill wind off the Bite whips its quays, but trade flows all the same.">
+        </button>
 
-      <!-- Bear Island -->
-      <button class="pin" style="--x:52.3%; --y:33.8%"
-        data-title="Bear Island"
-        data-sub="Seat of House Mormont"
-        data-text="Pines, storms, and a hall of warriors; the banner of the bear flying over cold surf.">
-      </button>
+        <!-- Widow's Watch -->
+        <button class="pin" data-left="75.9" data-top="73.8"
+          data-title="Widow’s Watch"
+          data-sub="Seat of House Flint (of Widow’s Watch)"
+          data-text="A sea-tower set to guard the Bite; its beacon is first to greet a storm.">
+        </button>
 
-      <!-- Ramsgate / Widows Watch coast marker (kept small) -->
-      <button class="pin" style="--x:74.3%; --y:82.7%"
-        data-title="Widows Watch"
-        data-sub="Coastal Holdfast"
-        data-text="Clifftop stones staring out upon the Shivering Sea; a watch kept for ships that never return.">
-      </button>
+        <!-- Cerwyn -->
+        <button class="pin" data-left="49.2" data-top="56.1"
+          data-title="Castle Cerwyn"
+          data-sub="Seat of House Cerwyn"
+          data-text="Loyal bannermen to the Starks, their black-and-white banners stand near Winterfell.">
+        </button>
 
-      <!-- Three Sisters cluster (south-east edge) -->
-      <button class="pin" style="--x:64.8%; --y:96.5%"
-        data-title="Sisterton"
-        data-sub="The Three Sisters"
-        data-text="Salt, tide, and tricky channels; a haven to some, a hazard to others.">
-      </button>
+        <!-- Moat Cailin / The Neck -->
+        <button class="pin" data-left="49.5" data-top="83.0"
+          data-title="Moat Cailin"
+          data-sub="The Neck"
+          data-text="Ruined towers rise from the bogs; even broken, they bar the South from the North.">
+        </button>
 
-      <!-- Lonely Hills / Long Lake interior ref -->
-      <button class="pin" style="--x:60.4%; --y:55.8%"
-        data-title="Lonely Hills"
-        data-sub="High Country"
-        data-text="Windswept rises above Long Lake where hunters know the tracks better than any road.">
-      </button>
+        <!-- Oldcastle (White Knife / south coast) -->
+        <button class="pin" data-left="57.7" data-top="85.8"
+          data-title="Oldcastle"
+          data-sub="South of the Bite"
+          data-text="An old holdfast watching the river mouths and marsh roads.">
+        </button>
 
-      <!-- Cerwyn -->
-      <button class="pin" style="--x:56.4%; --y:65.0%"
-        data-title="Cerwyn"
-        data-sub="Near Winterfell"
-        data-text="A stout hold on the kingsroad, sworn close and long to Stark.">
-      </button>
-
-      <!-- Barrow Hall (small but notable) -->
-      <button class="pin" style="--x:49.0%; --y:79.0%"
-        data-title="Barrow Hall"
-        data-sub="Dustin Lands"
-        data-text="Timber halls by ancient mounds, where the wind hums over heathered barrows.">
-      </button>
-
+      </div>
     </div>
   </main>
 
-  <!-- Parchment Modal -->
-  <div id="sheet" class="sheet-overlay" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
-    <div class="sheet">
-      <button class="sheet-close" aria-label="Close">&times;</button>
-      <h2 id="sheetTitle">Title</h2>
-      <div class="sub" id="sheetSub">Subtitle</div>
-      <div class="sheet-body">
-        <p id="sheetText">…</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- Footer (sitewide) -->
   <footer>
     <p>&copy; 2025 Kingdom of the North RP | From the Neck to the Shivering Sea</p>
   </footer>
 
-  <script>
-    // Open parchment with data from the clicked pin
-    const overlay = document.getElementById('sheet');
-    const titleEl = document.getElementById('sheetTitle');
-    const subEl   = document.getElementById('sheetSub');
-    const textEl  = document.getElementById('sheetText');
+  <div class="map-overlay" id="mapOverlay" role="dialog" aria-modal="true" aria-labelledby="mapTitle">
+    <div class="parchment">
+      <button class="close" aria-label="Close" onclick="closeMapModal()">&times;</button>
+      <h2 id="mapTitle">Title</h2>
+      <small id="mapSub">Sub</small>
+      <p id="mapText">Text</p>
+    </div>
+  </div>
 
-    document.querySelectorAll('.pin').forEach(pin=>{
-      pin.addEventListener('click', ()=>{
-        titleEl.textContent = pin.dataset.title || '';
-        subEl.textContent   = pin.dataset.sub   || '';
-        textEl.textContent  = pin.dataset.text  || '';
-        overlay.classList.add('open');
+  <script>
+    // place pins and wire modal
+    const pins = document.querySelectorAll('.pin');
+    const overlay = document.getElementById('mapOverlay');
+    const t = document.getElementById('mapTitle');
+    const s = document.getElementById('mapSub');
+    const p = document.getElementById('mapText');
+
+    function placePins() {
+      pins.forEach(pin => {
+        const left = pin.dataset.left;
+        const top  = pin.dataset.top;
+        pin.style.left = left + '%';
+        pin.style.top  = top  + '%';
       });
-      pin.addEventListener('keydown', (e)=>{
-        if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pin.click(); }
+    }
+    placePins();
+    window.addEventListener('resize', placePins);
+
+    pins.forEach(pin => {
+      pin.addEventListener('click', () => {
+        t.textContent = pin.dataset.title || '';
+        s.textContent = pin.dataset.sub   || '';
+        p.textContent = pin.dataset.text  || '';
+        overlay.style.display = 'grid';
       });
     });
 
-    const closeBtn = document.querySelector('.sheet-close');
-    const closeOverlay = () => overlay.classList.remove('open');
-    closeBtn.addEventListener('click', closeOverlay);
-    overlay.addEventListener('click', (e)=>{ if(e.target === overlay) closeOverlay(); });
-    document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeOverlay(); });
+    function closeMapModal(){ overlay.style.display = 'none'; }
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) closeMapModal();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeMapModal();
+    });
   </script>
 </body>
 </html>
