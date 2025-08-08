@@ -1,115 +1,145 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="map-page">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Map of the North | Kingdom of the North</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Map | Kingdom of the North</title>
+
   <style>
-    body, html {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      font-family: 'Georgia', serif;
+    /* ====== RESET / BASE ====== */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      background: #0d0d0d;
+      color: #eaeaea;
+      font-family: Georgia, "Times New Roman", serif;
+      overflow: hidden; /* lock page scroll; modal can scroll internally */
     }
 
+    a { color: #cfdfff; text-decoration: none; }
+    a:hover { color: #fff; }
+
+    /* ====== HEADER / NAV ====== */
     header {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      padding: 10px 30px;
-      background-color: rgba(0, 0, 0, 0.75);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      z-index: 1000;
+      display:flex; align-items:center; justify-content:space-between;
+      padding: 10px 24px; background:#111; border-bottom:2px solid #222;
     }
+    header .logo { height: 48px; }
+    nav { display:flex; gap:20px; }
+    nav a { font-weight:700; font-size:14px; color:#e0e0e0; }
+    nav a:hover { color:#ff6b6b; }
 
-    .logo {
-      height: 50px;
+    /* ====== MAP STAGE (kept in strict aspect ratio) ====== */
+    .map-wrap {
+      height: calc(100vh - 110px); /* header + footer room */
+      display:flex; justify-content:center; align-items:center;
+      background:#0d0d0d;
     }
-
-    nav {
-      display: flex;
-      gap: 20px;
-    }
-
-    nav a {
-      color: #fff;
-      font-weight: bold;
-      text-decoration: none;
-      font-size: 14px;
-    }
-
-    nav a:hover {
-      color: #ff9999;
-    }
-
-    .map-wrapper {
+    .map-stage {
       position: relative;
-      width: 100vw;
-      height: 100vh;
+      width: min(1600px, 96vw);
+      /* Aspect ratio of your northmap.jpg (change if your file differs) */
+      aspect-ratio: 1700 / 1143; /* matches your upload proportions closely */
+      overflow: hidden;
+      border: 1px solid #333;
+      box-shadow: 0 0 40px rgba(0,0,0,0.6);
+      background: #111;
     }
 
-    .map-wrapper img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      position: absolute;
-      top: 0;
-      left: 0;
+    /* The map image fills the stage but never distorts */
+    .map-img {
+      position:absolute; inset:0;
+      width:100%; height:100%;
+      object-fit: contain; /* preserves ratio so percentages stay true */
+      user-select:none; pointer-events:none;
     }
 
-    .marker {
-      position: absolute;
-      width: 20px;
-      height: 20px;
-      background-color: red;
-      border: 2px solid #fff;
-      border-radius: 50%;
-      cursor: pointer;
-      z-index: 500;
+    /* ====== MARKERS ====== */
+    .pin {
+      position:absolute;
+      width: 18px; height: 18px;
+      transform: translate(-50%, -50%); /* center over coordinate */
+      border-radius:50%;
+      background: radial-gradient(circle at 35% 35%, #ff5555, #b70000 70%);
+      border: 2px solid #fff2;
+      box-shadow: 0 0 10px rgba(255,60,60,0.6);
+      cursor:pointer;
+    }
+    .pin:hover { transform: translate(-50%, -50%) scale(1.1); }
+
+    /* (optional) little tip in upper-right */
+    .tip {
+      position:absolute; top:10px; right:10px;
+      background:#111b; color:#eee; border:1px solid #333;
+      padding:6px 10px; font-size:12px; border-radius:6px;
+      z-index: 2;
     }
 
-    .popup {
-      position: absolute;
-      background-image: url('images/parchment1.png');
-      background-size: cover;
-      background-repeat: no-repeat;
-      background-position: center;
-      padding: 30px;
-      max-width: 400px;
-      width: 90%;
-      color: #2a1a00;
-      font-size: 1rem;
-      font-weight: bold;
-      border-radius: 12px;
-      display: none;
-      z-index: 999;
-      text-align: center;
-    }
-
-    .popup h3 {
-      margin-top: 0;
-      font-size: 1.3rem;
-    }
-
-    footer {
-      position: absolute;
-      bottom: 0;
-      width: 100%;
-      text-align: center;
-      padding: 10px;
-      background-color: rgba(0, 0, 0, 0.7);
-      color: #aaa;
-      font-size: 0.85rem;
+    /* ====== MODAL (parchment) ====== */
+    .modal-backdrop {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,.55);
+      display:none; align-items:center; justify-content:center;
       z-index: 1000;
+    }
+    .modal {
+      position: relative;
+      max-width: min(900px, 90vw);
+      width: clamp(640px, 70vw, 900px);
+      padding: clamp(22px, 3vw, 28px);
+      background: #ead8b1; /* parchment base behind the PNG so edges feel warm */
+      border: 1px solid #4a3a1f;
+      box-shadow: 0 30px 60px rgba(0,0,0,.6);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .modal::before {
+      content:"";
+      position:absolute; inset:0;
+      background: url("images/parchment1.png") center/100% 100% no-repeat;
+      opacity: 0.9; /* show the parchment */
+      pointer-events:none;
+      z-index:0;
+    }
+    .modal h2, .modal h4, .modal p { position: relative; z-index:1; }
+    .modal h2 {
+      font-size: clamp(26px, 2.8vw, 34px);
+      text-align: center; color:#3a290f; margin-bottom: .35rem;
+    }
+    .modal h4 {
+      text-align:center; color:#6b4d21; font-size: clamp(14px, 1.3vw, 16px);
+      margin-bottom: .8rem; opacity: .9;
+    }
+    .modal p {
+      color:#2a1e0e; line-height: 1.5;
+      font-size: clamp(14px, 1.2vw, 17px);
+    }
+
+    .modal .close {
+      position:absolute; top:10px; right:12px; z-index:2;
+      font-size: 26px; border:none; background:none; color:#2a1e0e;
+      cursor:pointer; line-height:1;
+    }
+    .modal .close:hover { color:#000; transform: scale(1.05); }
+
+    /* ====== FOOTER ====== */
+    footer {
+      height: 62px; display:flex; align-items:center; justify-content:center;
+      color:#9a9a9a; font-size:14px; background:#111; border-top:1px solid #222;
+    }
+
+    /* ====== DEBUG HELP ====== */
+    .crosshair {
+      position:absolute; width:14px; height:14px;
+      border: 1px solid #fff5; border-radius:50%;
+      transform: translate(-50%,-50%); pointer-events:none;
+      box-shadow: 0 0 6px rgba(255,255,255,.4);
+      display:none;
     }
   </style>
 </head>
 <body>
+
   <header>
     <img src="images/northlogo.png" alt="The Kingdom of the North" class="logo">
     <nav>
@@ -119,48 +149,199 @@
       <a href="guard.html">Winter Guard</a>
       <a href="map.html">Map</a>
       <a href="stories.html">Stories</a>
-      <a href="discord.html">Discord</a>
+      <a href="discord.html">Join</a>
     </nav>
   </header>
 
-  <div class="map-wrapper">
-    <img src="images/northmap.jpg" alt="Map of the North">
-
-    <!-- Example marker -->
-    <div class="marker" style="top: 43%; left: 48%;" onclick="showPopup('Winterfell', 'Seat of House Stark, Winterfell is the ancient stronghold and heart of the North.')"></div>
-    <div class="marker" style="top: 53.5%; left: 61.5%;" onclick="showPopup('White Harbor', 'The North\'s only true city, ruled by House Manderly. Vital port and seat of commerce.')"></div>
-    <div class="marker" style="top: 38.5%; left: 60.5%;" onclick="showPopup('Karhold', 'Home of House Karstark, a Stark cadet branch known for fierce loyalty and hard justice.')"></div>
-    <div class="marker" style="top: 33%; left: 46%;" onclick="showPopup('Last Hearth', 'Stronghold of House Umber. The last major holdfast before the Wall.')"></div>
-    <div class="marker" style="top: 38.5%; left: 72%;" onclick="showPopup('Skagos', 'Isolated and brutal island, home to House Crowl and untamed wildlings.')"></div>
-    <div class="marker" style="top: 47%; left: 34.5%;" onclick="showPopup('Deepwood Motte', 'Forest seat of House Glover. Remote, strong, and fiercely loyal.')"></div>
-    <div class="marker" style="top: 51.5%; left: 42%;" onclick="showPopup('Barrowton', 'Seat of House Dustin. Built atop the barrows of First Men kings.')"></div>
-    <div class="marker" style="top: 59%; left: 51%;" onclick="showPopup('Hornwood', 'Small but old House. Rebuilt after the Bolton betrayal.')"></div>
-    <div class="marker" style="top: 47.5%; left: 59%;" onclick="showPopup('The Dreadfort', 'The grim keep of House Bolton, now loyal bannermen once more.')"></div>
-    <div class="marker" style="top: 40%; left: 41%;" onclick="showPopup('Torrhen\'s Square', 'Named for the last King in the North. Strategic seat of House Tallhart.')"></div>
+  <div class="map-wrap">
+    <div class="map-stage" id="stage">
+      <img src="images/northmap.jpg" alt="Map of the North" class="map-img" id="mapImg">
+      <div class="tip">Click the red markers for details</div>
+      <div class="crosshair" id="cross"></div>
+      <!-- Pins are injected by JS -->
+    </div>
   </div>
 
-  <div class="popup" id="popup"></div>
-
   <footer>
-    &copy; 2025 Kingdom of the North RP | From the Neck to the Shivering Sea
+    <p>&copy; 2025 Kingdom of the North RP &nbsp;|&nbsp; From the Neck to the Shivering Sea</p>
   </footer>
 
+  <!-- Modal -->
+  <div class="modal-backdrop" id="backdrop" role="dialog" aria-modal="true" aria-labelledby="locTitle">
+    <div class="modal" id="modal">
+      <button class="close" id="closeBtn" aria-label="Close">&times;</button>
+      <h2 id="locTitle">Winterfell</h2>
+      <h4 id="locSub">Seat of House Stark</h4>
+      <p id="locText">
+        The ancient heart of the North. From winter’s snows to summer’s storms, the grey keep endures—
+        its crypts and godswood older than memory.
+      </p>
+    </div>
+  </div>
+
   <script>
-    function showPopup(title, text) {
-      const popup = document.getElementById('popup');
-      popup.innerHTML = `<h3>${title}</h3><p>${text}</p>`;
-      popup.style.display = 'block';
-      popup.style.top = '50%';
-      popup.style.left = '50%';
-      popup.style.transform = 'translate(-50%, -50%)';
+    /* =========================
+       CONFIG
+    ==========================*/
+    // If you want to click the map to read percentages in the console, set true:
+    const DEBUG = false;
+
+    // 👉 Paste the coordinates that lined up best for you earlier right here.
+    // Coordinates are in PERCENT (% of the image width/height), relative to the
+    // full, undistorted image.  x = left %, y = top %.
+    const PINS = [
+      {
+        name: "Winterfell",
+        sub: "Seat of House Stark",
+        x: 53.6, y: 47.8,
+        text: "The ancient heart of the North. From winter’s snows to summer’s storms, the grey keep endures—its crypts and godswood older than memory."
+      },
+      {
+        name: "Last Hearth",
+        sub: "Seat of House Umber",
+        x: 56.0, y: 28.9,
+        text: "Northern watchtower of the Umbers, long the North’s mailed fist pointed at the snows beyond the Wall."
+      },
+      {
+        name: "Karhold",
+        sub: "Seat of House Karstark",
+        x: 79.6, y: 44.8,
+        text: "Bleak and windswept on the Shivering Sea; iron loyalty and colder justice."
+      },
+      {
+        name: "White Harbor",
+        sub: "Seat of House Manderly",
+        x: 62.5, y: 69.7,
+        text: "The North’s bright port. Marble quays, fat galleys, and hidden knives wrapped in courtesy."
+      },
+      {
+        name: "Deepwood Motte",
+        sub: "Seat of House Glover",
+        x: 36.9, y: 44.0,
+        text: "Timber and iron set in the rain‑soaked pines, its banners have flown in a dozen rebel winds."
+      },
+      {
+        name: "Dreadfort",
+        sub: "Seat of House Bolton",
+        x: 66.4, y: 55.9,
+        text: "Pale pink stone and darker history. The flayed man casts a long shadow."
+      },
+      {
+        name: "Hornwood",
+        sub: "Seat of House Hornwood",
+        x: 62.8, y: 61.8,
+        text: "A small but stubborn house, reborn after ruin; their axes bite deep."
+      },
+      {
+        name: "Barrowton",
+        sub: "Seat of House Dustin",
+        x: 46.9, y: 68.5,
+        text: "Where kings sleep beneath the hills and the living bargain above them."
+      },
+      {
+        name: "Moat Cailin",
+        sub: "First Gate of the North",
+        x: 53.4, y: 81.8,
+        text: "Rotting causeways and green‑black water: one road in, no easy road out."
+      },
+      {
+        name: "Widow’s Watch",
+        sub: "Stronghold on the Bite",
+        x: 79.0, y: 72.6,
+        text: "Salt and spray lash these cliffs; widows count the sails that never return."
+      },
+      {
+        name: "Greystone Watch",
+        sub: "Holdfast of the Greystarks",
+        x: 55.2, y: 77.0,
+        text: "An old, hard tower of the Neck’s marches. Little given, less forgotten."
+      },
+      {
+        name: "Winter Town",
+        sub: "Village of Winterfell",
+        x: 52.2, y: 52.2,
+        text: "Fires and frostbitten laughter in the cold months, carts and courtiers in the warm."
+      },
+      {
+        name: "Cerwyn",
+        sub: "Seat of House Cerwyn",
+        x: 56.2, y: 58.5,
+        text: "Shield to the Kings of Winter, as near to duty as they are to the wolves’ den."
+      },
+      {
+        name: "Torrhen’s Square",
+        sub: "Seat of House Tallhart",
+        x: 39.9, y: 63.5,
+        text: "A stout square keep rising from rivulets and peat. True northmen, broad of back."
+      },
+      {
+        name: "Flint’s Finger",
+        sub: "Seat of the Flints",
+        x: 36.3, y: 82.4,
+        text: "Storm‑gnawed cliffs, seal‑rich coves, and hands callused by oars and axes."
+      }
+    ];
+
+    /* =========================
+       RENDER & INTERACTION
+    ==========================*/
+    const stage = document.getElementById('stage');
+    const img   = document.getElementById('mapImg');
+    const cross = document.getElementById('cross');
+
+    const backdrop = document.getElementById('backdrop');
+    const modal    = document.getElementById('modal');
+    const closeBtn = document.getElementById('closeBtn');
+    const locTitle = document.getElementById('locTitle');
+    const locSub   = document.getElementById('locSub');
+    const locText  = document.getElementById('locText');
+
+    function addPin(pin) {
+      const el = document.createElement('button');
+      el.className = 'pin';
+      el.style.left = pin.x + '%';
+      el.style.top  = pin.y + '%';
+      el.title = pin.name;
+      el.addEventListener('click', () => openModal(pin));
+      stage.appendChild(el);
     }
 
-    document.addEventListener('click', function(event) {
-      const popup = document.getElementById('popup');
-      if (!event.target.classList.contains('marker')) {
-        popup.style.display = 'none';
-      }
+    function openModal(pin) {
+      locTitle.textContent = pin.name;
+      locSub.textContent   = pin.sub || '';
+      locText.textContent  = pin.text || '';
+      backdrop.style.display = 'flex';
+      // focus trap start
+      closeBtn.focus();
+    }
+
+    function closeModal() {
+      backdrop.style.display = 'none';
+    }
+
+    closeBtn.addEventListener('click', closeModal);
+    backdrop.addEventListener('click', (e) => {
+      if (e.target === backdrop) closeModal();
     });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    // Render all pins
+    PINS.forEach(addPin);
+
+    // ======== DEBUG: click to print % coords in console ========
+    if (DEBUG) {
+      cross.style.display = 'block';
+      stage.addEventListener('click', (e) => {
+        const rect = stage.getBoundingClientRect();
+        const xPct = ((e.clientX - rect.left) / rect.width) * 100;
+        const yPct = ((e.clientY - rect.top) / rect.height) * 100;
+        cross.style.left = xPct + '%';
+        cross.style.top  = yPct + '%';
+        console.log(`{ x: ${xPct.toFixed(1)}, y: ${yPct.toFixed(1)} }`);
+      });
+    }
   </script>
 </body>
 </html>
