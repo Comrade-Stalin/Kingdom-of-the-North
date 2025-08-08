@@ -4,161 +4,163 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Map of the North | Kingdom of the North</title>
-  <link rel="stylesheet" href="css/style.css">
   <style>
-    body {
+    body, html {
       margin: 0;
-      background-color: #000;
-      color: #fff;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
       font-family: 'Georgia', serif;
     }
 
-    .map-container {
-      position: relative;
+    header {
+      position: absolute;
+      top: 0;
+      left: 0;
       width: 100%;
-      max-width: 1600px;
-      margin: auto;
+      padding: 10px 30px;
+      background-color: rgba(0, 0, 0, 0.75);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
     }
 
-    .map-container img {
+    .logo {
+      height: 50px;
+    }
+
+    nav {
+      display: flex;
+      gap: 20px;
+    }
+
+    nav a {
+      color: #fff;
+      font-weight: bold;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    nav a:hover {
+      color: #ff9999;
+    }
+
+    .map-wrapper {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+    }
+
+    .map-wrapper img {
       width: 100%;
-      height: auto;
-      display: block;
+      height: 100%;
+      object-fit: cover;
+      position: absolute;
+      top: 0;
+      left: 0;
     }
 
     .marker {
       position: absolute;
-      width: 14px;
-      height: 14px;
+      width: 20px;
+      height: 20px;
       background-color: red;
-      border-radius: 50%;
       border: 2px solid #fff;
+      border-radius: 50%;
       cursor: pointer;
-      transform: translate(-50%, -50%);
+      z-index: 500;
     }
 
-    /* Modal */
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 1000;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      overflow: auto;
-      background-color: rgba(0,0,0,0.8);
-    }
-
-    .modal-content {
-      background: url('images/parchment1.png') no-repeat center center;
+    .popup {
+      position: absolute;
+      background-image: url('images/parchment1.png');
       background-size: cover;
-      margin: 5% auto;
-      padding: 40px;
-      border: 1px solid #888;
-      width: 60%;
-      max-width: 800px;
-      color: #000;
-      text-align: center;
-      border-radius: 10px;
-    }
-
-    .close {
-      color: #000;
-      float: right;
-      font-size: 28px;
+      background-repeat: no-repeat;
+      background-position: center;
+      padding: 30px;
+      max-width: 400px;
+      width: 90%;
+      color: #2a1a00;
+      font-size: 1rem;
       font-weight: bold;
-      cursor: pointer;
+      border-radius: 12px;
+      display: none;
+      z-index: 999;
+      text-align: center;
     }
 
-    .close:hover {
-      color: #a00;
+    .popup h3 {
+      margin-top: 0;
+      font-size: 1.3rem;
     }
 
     footer {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
       text-align: center;
-      padding: 20px;
-      font-size: 0.9rem;
-      color: #888;
-      border-top: 1px solid #333;
-      background-color: #111;
+      padding: 10px;
+      background-color: rgba(0, 0, 0, 0.7);
+      color: #aaa;
+      font-size: 0.85rem;
+      z-index: 1000;
     }
   </style>
 </head>
 <body>
+  <header>
+    <img src="images/northlogo.png" alt="The Kingdom of the North" class="logo">
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="laws.html">Laws</a>
+      <a href="court.html">Winter Court</a>
+      <a href="guard.html">Winter Guard</a>
+      <a href="map.html">Map</a>
+      <a href="stories.html">Stories</a>
+      <a href="discord.html">Discord</a>
+    </nav>
+  </header>
 
-<header>
-  <img src="images/northlogo.png" alt="The Kingdom of the North" class="logo">
-  <nav>
-    <a href="index.html">Home</a>
-    <a href="laws.html">Laws</a>
-    <a href="court.html">Winter Court</a>
-    <a href="guard.html">Winter Guard</a>
-    <a href="map.html">Map</a>
-    <a href="stories.html">Stories</a>
-    <a href="discord.html">Join</a>
-  </nav>
-</header>
+  <div class="map-wrapper">
+    <img src="images/northmap.jpg" alt="Map of the North">
 
-<div class="map-container">
-  <img src="images/northmap.jpg" alt="Map of the North">
-
-  <!-- Markers with percentage-based positions -->
-  <div class="marker" style="top: 46%; left: 47%;" onclick="openModal('Winterfell')"></div>
-  <div class="marker" style="top: 77%; left: 55%;" onclick="openModal('White Harbor')"></div>
-  <div class="marker" style="top: 30%; left: 44%;" onclick="openModal('Bear Island')"></div>
-  <div class="marker" style="top: 24%; left: 59%;" onclick="openModal('Karhold')"></div>
-  <div class="marker" style="top: 34%; left: 54%;" onclick="openModal('Last Hearth')"></div>
-  <div class="marker" style="top: 59%; left: 50%;" onclick="openModal('Barrowton')"></div>
-  <div class="marker" style="top: 68%; left: 50%;" onclick="openModal('Moat Cailin')"></div>
-  <div class="marker" style="top: 65%; left: 61%;" onclick="openModal('Widows Watch')"></div>
-  <div class="marker" style="top: 37%; left: 51%;" onclick="openModal('Dreadfort')"></div>
-  <div class="marker" style="top: 57%; left: 54%;" onclick="openModal('Torrhens Square')"></div>
-</div>
-
-<!-- Modal -->
-<div id="infoModal" class="modal">
-  <div class="modal-content">
-    <span class="close" onclick="closeModal()">&times;</span>
-    <h2 id="locationName"></h2>
-    <p id="locationDesc"></p>
+    <!-- Example marker -->
+    <div class="marker" style="top: 43%; left: 48%;" onclick="showPopup('Winterfell', 'Seat of House Stark, Winterfell is the ancient stronghold and heart of the North.')"></div>
+    <div class="marker" style="top: 53.5%; left: 61.5%;" onclick="showPopup('White Harbor', 'The North\'s only true city, ruled by House Manderly. Vital port and seat of commerce.')"></div>
+    <div class="marker" style="top: 38.5%; left: 60.5%;" onclick="showPopup('Karhold', 'Home of House Karstark, a Stark cadet branch known for fierce loyalty and hard justice.')"></div>
+    <div class="marker" style="top: 33%; left: 46%;" onclick="showPopup('Last Hearth', 'Stronghold of House Umber. The last major holdfast before the Wall.')"></div>
+    <div class="marker" style="top: 38.5%; left: 72%;" onclick="showPopup('Skagos', 'Isolated and brutal island, home to House Crowl and untamed wildlings.')"></div>
+    <div class="marker" style="top: 47%; left: 34.5%;" onclick="showPopup('Deepwood Motte', 'Forest seat of House Glover. Remote, strong, and fiercely loyal.')"></div>
+    <div class="marker" style="top: 51.5%; left: 42%;" onclick="showPopup('Barrowton', 'Seat of House Dustin. Built atop the barrows of First Men kings.')"></div>
+    <div class="marker" style="top: 59%; left: 51%;" onclick="showPopup('Hornwood', 'Small but old House. Rebuilt after the Bolton betrayal.')"></div>
+    <div class="marker" style="top: 47.5%; left: 59%;" onclick="showPopup('The Dreadfort', 'The grim keep of House Bolton, now loyal bannermen once more.')"></div>
+    <div class="marker" style="top: 40%; left: 41%;" onclick="showPopup('Torrhen\'s Square', 'Named for the last King in the North. Strategic seat of House Tallhart.')"></div>
   </div>
-</div>
 
-<footer>
-  <p>&copy; 2025 Kingdom of the North RP | Bound by Blood, Led by Honor</p>
-</footer>
+  <div class="popup" id="popup"></div>
 
-<script>
-  const locations = {
-    "Winterfell": "Seat of House Stark. From winter’s snows to summer’s storms, the grey keep endures, its crypts and godswood older than memory.",
-    "White Harbor": "The bustling port city and seat of House Manderly, famed for its trade, shipwrights, and loyalty to the Starks.",
-    "Bear Island": "Home to House Mormont, known for its fierce warriors and harsh, isolated beauty.",
-    "Karhold": "Seat of House Karstark, kin to the Starks. A cold and formidable stronghold in the northeast.",
-    "Last Hearth": "Seat of House Umber, a hardy people guarding the approach to the Wall.",
-    "Barrowton": "Seat of House Dustin, built atop ancient First Men burial mounds.",
-    "Moat Cailin": "An ancient fortress of the First Men, commanding the Neck and guarding the North from southern invasion.",
-    "Widows Watch": "Seat of House Flint of Widows Watch, standing as a lonely sentinel on the eastern coast.",
-    "Dreadfort": "Seat of House Bolton, infamous for its bloody history and the flayed man banner.",
-    "Torrhens Square": "Seat of House Tallhart, loyal bannermen to the Starks, guarding the western road to Winterfell."
-  };
+  <footer>
+    &copy; 2025 Kingdom of the North RP | From the Neck to the Shivering Sea
+  </footer>
 
-  function openModal(name) {
-    document.getElementById("locationName").innerText = name;
-    document.getElementById("locationDesc").innerText = locations[name];
-    document.getElementById("infoModal").style.display = "block";
-  }
-
-  function closeModal() {
-    document.getElementById("infoModal").style.display = "none";
-  }
-
-  window.onclick = function(event) {
-    if (event.target == document.getElementById("infoModal")) {
-      closeModal();
+  <script>
+    function showPopup(title, text) {
+      const popup = document.getElementById('popup');
+      popup.innerHTML = `<h3>${title}</h3><p>${text}</p>`;
+      popup.style.display = 'block';
+      popup.style.top = '50%';
+      popup.style.left = '50%';
+      popup.style.transform = 'translate(-50%, -50%)';
     }
-  }
-</script>
 
+    document.addEventListener('click', function(event) {
+      const popup = document.getElementById('popup');
+      if (!event.target.classList.contains('marker')) {
+        popup.style.display = 'none';
+      }
+    });
+  </script>
 </body>
 </html>
