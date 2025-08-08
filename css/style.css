@@ -307,3 +307,20 @@ body.laws-page {
 .discord-btn:hover {
   background-color: #5b6eae;
 }
+
+/* ===== MAP PAGE (namespaced so globals don't interfere) ===== */
+body.map-page main {
+  padding: 0;              /* remove sitewide main padding on the map */
+  min-height: 0;           /* don't force extra height */
+}
+
+body.map-page footer {
+  margin-top: 0;           /* keep footer snug under the map */
+}
+
+/* Make sure sitewide modal rules never touch map's parchment modal */
+body.map-page .modal,
+body.map-page .modal-overlay,
+body.map-page .close-btn {
+  all: unset;              /* nuke inherited modal styles (safe because we don't use these classes on the map page) */
+}
