@@ -308,95 +308,83 @@ body.laws-page {
   background-color: #5b6eae;
 }
 
-/* ===== MAP PAGE (namespaced so globals don't interfere) ===== */
-body.map-page main {
-  padding: 0;              /* remove sitewide main padding on the map */
-  min-height: 0;           /* don't force extra height */
-}
-
-body.map-page footer {
-  margin-top: 0;           /* keep footer snug under the map */
-}
-
-/* Make sure sitewide modal rules never touch map's parchment modal */
-body.map-page .modal,
-body.map-page .modal-overlay,
-body.map-page .close-btn {
-  all: unset;              /* nuke inherited modal styles (safe because we don't use these classes on the map page) */
-}
-
-/* === Map page modal (image-only parchment with copy inside) === */
-body.map-page .map-overlay{
+/* ===== MAP OVERLAY — force parchment-only modal ===== */
+#mapOverlay{
   position: fixed; inset: 0;
-  display: none;                 /* set to grid in JS when opened */
+  display: none;                 /* JS sets to grid when open */
   place-items: center;
   background: rgba(0,0,0,.74);
-  z-index: 2000;
+  z-index: 3000;
   padding: 1rem;
 }
 
-/* Shell: no panel color, no padding */
-body.map-page .parchment{
+#mapOverlay .parchment{
   position: relative;
   width: min(980px, 92vw);
   padding: 0;
-  background: transparent !important;   /* kill any leftover beige */
-  border: 0;
+  background: transparent !important;   /* no beige panel */
+  border: 0 !important;
   box-shadow: 0 12px 60px rgba(0,0,0,.65);
   border-radius: 8px;
 }
 
-/* The parchment image itself */
-body.map-page .parchment .paper{
+/* the parchment image itself */
+#mapOverlay .parchment .paper{
   display: block;
   width: 100%;
   height: auto;
-  user-select: none;
   pointer-events: none;
+  user-select: none;
+  z-index: 1;
 }
 
-/* Copy area placed INSIDE the scrollwork.
-   Tweak the four insets to fit your PNG perfectly. */
-body.map-page .parchment .paper-copy{
+/* text that sits ON TOP of the image, inside the scroll area */
+#mapOverlay .parchment .paper-copy{
   position: absolute;
-  left: 12%;          /* inner left margin */
-  right: 18%;         /* inner right margin (more to dodge the ribbon) */
-  top: 18%;           /* inner top margin */
-  bottom: 22%;        /* inner bottom margin (clear the tail) */
+  z-index: 2;
+  left: 11.5%;          /* tune these 4 insets to your PNG */
+  right: 17.5%;
+  top: 17%;
+  bottom: 21%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
-  color: #2a1f12;
-  font-family: Georgia, serif;
-  line-height: 1.7;
+
+  /* kill any inherited “white on dark” styles */
+  background: transparent !important;
+  color: #2a1f12 !important;
+  text-shadow: none !important;
 }
 
-body.map-page .parchment .paper-copy h2{
-  margin: 0 0 .4rem 0;
-  font-size: clamp(1.4rem, 2.6vw, 1.75rem);
-  color: #1f1307;
+#mapOverlay .parchment .paper-copy h2{
+  margin: 0 0 .45rem 0;
+  font-family: Georgia, serif;
+  font-size: clamp(1.4rem, 2.6vw, 1.8rem);
+  color: #1f1307 !important;
   letter-spacing: .4px;
 }
 
-body.map-page .parchment .paper-copy small{
+#mapOverlay .parchment .paper-copy small{
   margin: 0 0 1rem 0;
-  color: #5a4030;
+  color: #5a4030 !important;
   letter-spacing: .3px;
 }
 
-body.map-page .parchment .paper-copy p{
+#mapOverlay .parchment .paper-copy p{
   margin: 0;
   max-width: 62ch;
   font-size: clamp(1rem, 2vw, 1.125rem);
+  line-height: 1.7;
+  color: #2a1f12 !important;
 }
 
-/* Close button */
-body.map-page .parchment .close{
+#mapOverlay .parchment .close{
   position: absolute;
   top: 10px; right: 14px;
   font-size: 1.8rem; line-height: 1;
   color: #3a2a1a;
   background: none; border: none; cursor: pointer;
+  z-index: 3;
 }
