@@ -325,70 +325,78 @@ body.map-page .close-btn {
   all: unset;              /* nuke inherited modal styles (safe because we don't use these classes on the map page) */
 }
 
-/* —— Map-page parchment modal (scoped so it can't fight sitewide styles) —— */
+/* === Map page modal (image-only parchment with copy inside) === */
 body.map-page .map-overlay{
-  position: fixed;
-  inset: 0;
+  position: fixed; inset: 0;
   display: none;                 /* set to grid in JS when opened */
-  place-items: center;           /* perfect centering */
+  place-items: center;
   background: rgba(0,0,0,.74);
   z-index: 2000;
   padding: 1rem;
 }
 
-/* outer shell: box + shadow only */
+/* Shell: no panel color, no padding */
 body.map-page .parchment{
   position: relative;
-  width: min(1000px, 92vw);
-  padding: 0;                    /* no padding here */
-  background: transparent;       /* artwork lives on the inner element */
-  border: 1px solid rgba(90,70,40,.35);
+  width: min(980px, 92vw);
+  padding: 0;
+  background: transparent !important;   /* kill any leftover beige */
+  border: 0;
   box-shadow: 0 12px 60px rgba(0,0,0,.65);
   border-radius: 8px;
 }
 
-/* the actual parchment surface with the copy printed ON it */
-body.map-page .parchment-inner{
-  background: url('../images/parchment1.png') center / contain no-repeat;
-  background-color: #e7d8b2;     /* shows through transparent paper fibers */
-  min-height: clamp(360px, 48vh, 560px);
-  /* Percent padding keeps text well inside the scroll edges at every size */
-  padding: clamp(12%, 10vw, 14%) clamp(9%, 7.5vw, 11%);
+/* The parchment image itself */
+body.map-page .parchment .paper{
+  display: block;
+  width: 100%;
+  height: auto;
+  user-select: none;
+  pointer-events: none;
+}
+
+/* Copy area placed INSIDE the scrollwork.
+   Tweak the four insets to fit your PNG perfectly. */
+body.map-page .parchment .paper-copy{
+  position: absolute;
+  left: 12%;          /* inner left margin */
+  right: 18%;         /* inner right margin (more to dodge the ribbon) */
+  top: 18%;           /* inner top margin */
+  bottom: 22%;        /* inner bottom margin (clear the tail) */
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   text-align: center;
-  border-radius: 8px;
   color: #2a1f12;
   font-family: Georgia, serif;
   line-height: 1.7;
 }
 
-body.map-page .parchment h2{
+body.map-page .parchment .paper-copy h2{
   margin: 0 0 .4rem 0;
   font-size: clamp(1.4rem, 2.6vw, 1.75rem);
   color: #1f1307;
   letter-spacing: .4px;
 }
-body.map-page .parchment small{
+
+body.map-page .parchment .paper-copy small{
   margin: 0 0 1rem 0;
   color: #5a4030;
   letter-spacing: .3px;
 }
-body.map-page .parchment p{
+
+body.map-page .parchment .paper-copy p{
   margin: 0;
   max-width: 62ch;
   font-size: clamp(1rem, 2vw, 1.125rem);
 }
 
+/* Close button */
 body.map-page .parchment .close{
   position: absolute;
   top: 10px; right: 14px;
-  font-size: 1.8rem;
-  line-height: 1;
+  font-size: 1.8rem; line-height: 1;
   color: #3a2a1a;
-  background: none;
-  border: none;
-  cursor: pointer;
+  background: none; border: none; cursor: pointer;
 }
