@@ -76,51 +76,22 @@
       100%{ transform: scale(1.15); opacity: 0; }
     }
 
-    /* Parchment Modal */
-    .map-overlay {
-      position: fixed; inset: 0;
-      background: rgba(0,0,0,.74);
-      display: none;
-      place-items: center;
-      z-index: 1000;
-      padding: 1rem;
-    }
-    .parchment {
-      position: relative;
-      width: min(900px, 92vw);
-      min-height: 320px;
-      padding: 2.5rem 2rem 1.75rem;
-      background: url('images/parchment1.png') center/contain no-repeat, #f0e0b9;
-      color: #2a1f12;
-      font-family: "Georgia", serif;
-      line-height: 1.55;
-      border: 1px solid rgba(90,70,40,.4);
-      box-shadow: 0 10px 50px rgba(0,0,0,.6);
-    }
-    .parchment h2 {
-      font-size: 1.45rem;
-      margin-bottom: .25rem;
-      text-align: center;
-      color: #1f1307;
-      letter-spacing: .4px;
-    }
-    .parchment small {
-      display: block;
-      text-align: center;
-      margin-bottom: .85rem;
-      color: #5a4030;
-      letter-spacing: .3px;
-    }
-    .parchment p { margin: .5rem 0; }
-    .parchment .close {
-      position: absolute; top: 8px; right: 12px;
-      font-size: 1.8rem;
-      color: #3a2a1a;
-      background: transparent;
-      border: none;
-      cursor: pointer;
-      line-height: 1;
-    }
+<!-- Modal -->
+<div class="map-overlay" id="mapOverlay" role="dialog" aria-modal="true" aria-labelledby="mapTitle">
+  <div class="parchment">
+    <button class="close" aria-label="Close" onclick="closeMapModal()">&times;</button>
+
+    <!-- The parchment as an image -->
+    <img class="paper" src="images/parchment1.png" alt="Parchment">
+
+    <!-- Text printed on the parchment (positioned inside the scroll area) -->
+    <div class="paper-copy">
+      <h2 id="mapTitle">Title</h2>
+      <small id="mapSub">Sub</small>
+      <p id="mapText">Text</p>
+    </div>
+  </div>
+</div>
 
     /* Footer at the very bottom */
     footer { flex-shrink: 0; }
