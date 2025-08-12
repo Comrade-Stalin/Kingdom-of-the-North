@@ -14,134 +14,62 @@
       flex-direction: column;
       background-color: #0d0d0d;
     }
-    main.map-main {
-      flex: 1 0 auto;
-      padding: 0;
+    main.map-main { flex: 1 0 auto; padding: 0; }
+
+    .map-frame{
+      position:relative;
+      width:min(1800px,95vw);
+      aspect-ratio:2048/1319; /* matches northmap.jpg proportions */
+      margin:20px auto 8px auto;
+      background:url('images/northmap.jpg') center center/contain no-repeat;
+      border:1px solid #353535;
+      box-shadow:0 0 45px rgba(0,0,0,.55);
     }
 
-    .map-frame {
-      position: relative;
-      width: min(1800px, 95vw);
-      aspect-ratio: 2048 / 1319;
-      margin: 20px auto 8px auto;
-      background: url('images/northmap.jpg') center center / contain no-repeat;
-      border: 1px solid #353535;
-      box-shadow: 0 0 45px rgba(0,0,0,0.55);
+    .map-note{
+      position:absolute; right:.8%; top:1%;
+      background:rgba(0,0,0,.55); color:#ddd;
+      padding:.35rem .6rem; border:1px solid #444; border-radius:6px;
+      font-size:.85rem; pointer-events:none; user-select:none;
     }
 
-    .map-note {
-      position: absolute;
-      right: 0.8%;
-      top: 1%;
-      background: rgba(0,0,0,.55);
-      color: #ddd;
-      padding: .35rem .6rem;
-      border: 1px solid #444;
-      border-radius: 6px;
-      font-size: .85rem;
-      pointer-events: none;
-      user-select: none;
+    .pins{ position:absolute; inset:0; }
+    .pin{
+      position:absolute; width:18px; height:18px; border-radius:50%;
+      background:#b12222; border:2px solid #3b0d0d;
+      box-shadow:0 0 0 3px rgba(177,34,34,.25), 0 0 10px rgba(0,0,0,.6);
+      transform:translate(-50%,-50%); cursor:pointer;
     }
+    .pin::after{
+      content:""; position:absolute; inset:-6px; border-radius:50%;
+      box-shadow:0 0 12px rgba(255,52,52,.55); opacity:.9;
+      animation:pulse 1.8s ease-out infinite;
+    }
+    @keyframes pulse{ 0%{transform:scale(.7);opacity:.8} 60%{transform:scale(1.15);opacity:0} 100%{transform:scale(1.15);opacity:0} }
 
-    .pins { position: absolute; inset: 0; }
-    .pin {
-      position: absolute;
-      width: 18px; height: 18px;
-      border-radius: 50%;
-      background: #b12222;
-      border: 2px solid #3b0d0d;
-      box-shadow: 0 0 0 3px rgba(177,34,34,.25), 0 0 10px rgba(0,0,0,.6);
-      transform: translate(-50%, -50%);
-      cursor: pointer;
+    /* Parchment modal (parchment-only; no beige box) */
+    #mapOverlay{
+      position:fixed; inset:0; display:none; place-items:center;
+      background:rgba(0,0,0,.74); z-index:3000; padding:1rem;
     }
-    .pin::after {
-      content: "";
-      position: absolute;
-      inset: -6px;
-      border-radius: 50%;
-      box-shadow: 0 0 12px rgba(255,52,52,.55);
-      opacity: .9;
-      animation: pulse 1.8s ease-out infinite;
+    #mapOverlay .parchment{
+      position:relative; width:min(980px,92vw); padding:0;
+      background:transparent!important; border:0!important;
+      box-shadow:0 12px 60px rgba(0,0,0,.65); border-radius:8px;
     }
-    @keyframes pulse {
-      0% { transform: scale(0.7); opacity: .8; }
-      60%{ transform: scale(1.15); opacity: 0; }
-      100%{ transform: scale(1.15); opacity: 0; }
+    #mapOverlay .parchment .paper{
+      display:block; width:100%; height:auto; pointer-events:none; user-select:none; z-index:1;
     }
-
-    /* Footer at the very bottom */
-    footer { flex-shrink: 0; }
-
-    /* ===== MAP OVERLAY ===== */
-    #mapOverlay {
-      position: fixed; inset: 0;
-      display: none;
-      place-items: center;
-      background: rgba(0,0,0,.74);
-      z-index: 3000;
-      padding: 1rem;
+    #mapOverlay .parchment .paper-copy{
+      position:absolute; z-index:2;
+      left:12%; right:12%; top:15%; bottom:18%;
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      text-align:center; background:transparent!important; color:#2a1f12!important; text-shadow:none!important;
     }
-    #mapOverlay .parchment {
-      position: relative;
-      width: min(980px, 92vw);
-      padding: 0;
-      background: transparent !important;
-      border: 0 !important;
-      box-shadow: 0 12px 60px rgba(0,0,0,.65);
-      border-radius: 8px;
-    }
-    #mapOverlay .parchment .paper {
-      display: block;
-      width: 100%;
-      height: auto;
-      pointer-events: none;
-      user-select: none;
-      z-index: 1;
-    }
-    #mapOverlay .parchment .paper-copy {
-      position: absolute;
-      z-index: 2;
-      /* tuned insets to fit parchment perfectly */
-      left: 12%;
-      right: 12%;
-      top: 15%;
-      bottom: 18%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      background: transparent !important;
-      color: #2a1f12 !important;
-      text-shadow: none !important;
-    }
-    #mapOverlay .parchment .paper-copy h2 {
-      margin: 0 0 .45rem 0;
-      font-family: Georgia, serif;
-      font-size: clamp(1.4rem, 2.6vw, 1.8rem);
-      color: #1f1307 !important;
-      letter-spacing: .4px;
-    }
-    #mapOverlay .parchment .paper-copy small {
-      margin: 0 0 1rem 0;
-      color: #5a4030 !important;
-      letter-spacing: .3px;
-    }
-    #mapOverlay .parchment .paper-copy p {
-      margin: 0;
-      max-width: 62ch;
-      font-size: clamp(1rem, 2vw, 1.125rem);
-      line-height: 1.7;
-      color: #2a1f12 !important;
-    }
-    #mapOverlay .parchment .close {
-      position: absolute;
-      top: 10px; right: 14px;
-      font-size: 1.8rem; line-height: 1;
-      color: #3a2a1a;
-      background: none; border: none; cursor: pointer;
-      z-index: 3;
-    }
+    #mapOverlay .parchment .paper-copy h2{ margin:0 0 .45rem 0; font-family:Georgia,serif; font-size:clamp(1.4rem,2.6vw,1.8rem); color:#1f1307!important; letter-spacing:.4px; }
+    #mapOverlay .parchment .paper-copy small{ margin:0 0 1rem 0; color:#5a4030!important; letter-spacing:.3px; }
+    #mapOverlay .parchment .paper-copy p{ margin:0; max-width:62ch; font-size:clamp(1rem,2vw,1.125rem); line-height:1.7; color:#2a1f12!important; }
+    #mapOverlay .parchment .close{ position:absolute; top:10px; right:14px; font-size:1.8rem; line-height:1; color:#3a2a1a; background:none; border:none; cursor:pointer; z-index:3; }
   </style>
 </head>
 
@@ -164,13 +92,82 @@
       <div class="map-note">Click the red markers for details</div>
 
       <div class="pins" id="pins">
-        <!-- your pin buttons here exactly as before -->
-        <!-- example -->
+        <!-- WEST & BAY OF ICE -->
+        <button class="pin" data-left="35.6" data-top="14.4"
+          data-title="Bear Island" data-sub="Seat of House Mormont"
+          data-text="Stone shores, cold seas, and a house as fierce as the bears that roam its pines."></button>
+
+        <button class="pin" data-left="38.1" data-top="28.6"
+          data-title="Deepwood Motte" data-sub="Seat of House Glover"
+          data-text="Timber palisades and watchful spears guard the wolfswood’s western roads."></button>
+
+        <!-- CENTRAL NORTH -->
+        <button class="pin" data-left="46.2" data-top="52.0"
+          data-title="Winterfell" data-sub="Seat of House Stark"
+          data-text="The ancient heart of the North—grey walls, hot springs, crypts and a godswood older than memory."></button>
+
         <button class="pin" data-left="49.2" data-top="56.1"
-          data-title="Castle Cerwyn"
-          data-sub="Seat of House Cerwyn"
-          data-text="Loyal bannermen to the Starks, their black-and-white banners stand near Winterfell.">
-        </button>
+          data-title="Castle Cerwyn" data-sub="Seat of House Cerwyn"
+          data-text="Loyal bannermen of Stark; their black‑and‑white banners stand near Winterfell."></button>
+
+        <button class="pin" data-left="44.6" data-top="61.5"
+          data-title="Torrhen’s Square" data-sub="Seat of House Tallhart"
+          data-text="A stout holdfast on the western road, raised where the old kings once mustered."></button>
+
+        <button class="pin" data-left="39.4" data-top="66.9"
+          data-title="Barrowton" data-sub="Seat of House Dustin"
+          data-text="A market‑town upon the barrow mounds of the First Men, rich in trade and old bones."></button>
+
+        <button class="pin" data-left="45.8" data-top="73.9"
+          data-title="Barrow Hall" data-sub="Seat of House Ryswell"
+          data-text="Low stone halls ringed by turf barrows—quiet lands, stubborn riders."></button>
+
+        <button class="pin" data-left="31.3" data-top="70.9"
+          data-title="The Rills" data-sub="Harlaw & Saltpans"
+          data-text="Flooded flats and reed‑cutters’ ditches; patient fields and riverwise folk."></button>
+
+        <!-- EAST & THE BITE -->
+        <button class="pin" data-left="56.6" data-top="56.8"
+          data-title="Hornwood" data-sub="Seat of House Hornwood"
+          data-text="Forest keeps and hunters’ trails—stags and axes on iron‑strong arms."></button>
+
+        <button class="pin" data-left="60.2" data-top="51.8"
+          data-title="The Dreadfort" data-sub="Seat of House Bolton"
+          data-text="Pale stone and darker tales; a fortress that watches the Weeping Water with an unblinking eye."></button>
+
+        <button class="pin" data-left="57.2" data-top="29.4"
+          data-title="Last Hearth" data-sub="Seat of House Umber"
+          data-text="Hard north and hearty hands—great axes, greater laughter, and no fear of snow."></button>
+
+        <button class="pin" data-left="70.8" data-top="34.8"
+          data-title="Karhold" data-sub="Seat of House Karstark"
+          data-text="A stern sea‑keep on the Shivering coast; honor kept in iron and oath."></button>
+
+        <button class="pin" data-left="63.7" data-top="46.9"
+          data-title="Blackpool" data-sub="Harbor Holdfast"
+          data-text="A bleak little harbor with iron moorings and hardy fisherfolk."></button>
+
+        <button class="pin" data-left="60.9" data-top="71.8"
+          data-title="Ramsgate" data-sub="Harbor of the Lonely Hills"
+          data-text="A wind‑bitten quay on the Bite where the hills meet the sea lanes."></button>
+
+        <button class="pin" data-left="75.9" data-top="73.8"
+          data-title="Widow’s Watch" data-sub="Seat of House Flint (of Widow’s Watch)"
+          data-text="A cliff tower raised to watch the Bite; its beacon greets the fiercest storm."></button>
+
+        <button class="pin" data-left="53.2" data-top="73.6"
+          data-title="White Harbor" data-sub="Seat of House Manderly"
+          data-text="The North’s great city—mermen banners above bustling quays and faithful spears."></button>
+
+        <!-- THE NECK (northern edge only) -->
+        <button class="pin" data-left="49.5" data-top="83.0"
+          data-title="Moat Cailin" data-sub="The Neck, First Men Ruins"
+          data-text="Broken towers rising from bog and causeway; even in ruin it bars the South from the North."></button>
+
+        <!-- WEST OF THE NECK (still North) -->
+        <button class="pin" data-left="42.9" data-top="88.4"
+          data-title="Flint’s Finger" data-sub="Seat of House Flint (of Flint’s Finger)"
+          data-text="A sea‑gnawed peninsula of black cliffs and flinty halls, stubborn as the rock itself."></button>
       </div>
     </div>
   </main>
@@ -199,31 +196,27 @@
     const s = document.getElementById('mapSub');
     const p = document.getElementById('mapText');
 
-    function placePins() {
-      pins.forEach(pin => {
+    function placePins(){
+      pins.forEach(pin=>{
         pin.style.left = pin.dataset.left + '%';
-        pin.style.top  = pin.dataset.top + '%';
+        pin.style.top  = pin.dataset.top  + '%';
       });
     }
     placePins();
     window.addEventListener('resize', placePins);
 
-    pins.forEach(pin => {
-      pin.addEventListener('click', () => {
+    pins.forEach(pin=>{
+      pin.addEventListener('click', ()=>{
         t.textContent = pin.dataset.title || '';
-        s.textContent = pin.dataset.sub || '';
-        p.textContent = pin.dataset.text || '';
+        s.textContent = pin.dataset.sub   || '';
+        p.textContent = pin.dataset.text  || '';
         overlay.style.display = 'grid';
       });
     });
 
     function closeMapModal(){ overlay.style.display = 'none'; }
-    overlay.addEventListener('click', (e) => {
-      if (e.target === overlay) closeMapModal();
-    });
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeMapModal();
-    });
+    overlay.addEventListener('click', (e)=>{ if(e.target===overlay) closeMapModal(); });
+    document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeMapModal(); });
   </script>
 </body>
 </html>
